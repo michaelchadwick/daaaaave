@@ -12,7 +12,15 @@
     );
     echo json_encode($json);
   } else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['slack'])) {
-    echo "Yeah, Dave is with you, man.";
+    if(isset($_GET['token']) && $_GET['token'] == 'lrq432zlxosmAbfsNNhhG6yc') {
+      $responses = array(
+        "Yeah, Dave is with you, man.",
+        "Damn right Dave is down.",
+        "You got it!",
+        "Hell yes!"
+      );
+      echo $responses[rand(0,3)];
+    }
   } else {
 ?>
 
