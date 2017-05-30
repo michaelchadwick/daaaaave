@@ -1,3 +1,21 @@
+<?php
+  if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['api'])) {
+    header('Content-type: application/json');
+    $json = array(
+      "dave" => "YES!",
+      "daave" => "YES!",
+      "daaave" => "YES!",
+      "daaaave" => "YES!",
+      "daaaaave" => "YES!",
+      "daaaaaave" => "YES!",
+      "daaaaaaave" => "YES!",
+    );
+    echo json_encode($json);
+  } else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['slack'])) {
+    echo "Yeah, Dave is with you, man.";
+  } else {
+?>
+
 <!doctype html>
 <html>
 <head>
@@ -68,3 +86,6 @@
   </script>
 </body>
 </html>
+<?php
+}
+?>
