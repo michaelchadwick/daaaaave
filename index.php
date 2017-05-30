@@ -20,7 +20,11 @@
         "Hell yes!",
         "Alive and all that jive."
       );
-      echo $responses[rand(0,3)];
+      $json = array(
+        "response_type" => "in_channel",
+        "text" => $responses[rand(0,3)]
+      );
+      echo json_encode($json);
     }
   } else {
 ?>
