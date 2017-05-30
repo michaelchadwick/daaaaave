@@ -17,7 +17,8 @@
         "Yeah, Dave is with you, man.",
         "Damn right Dave is down.",
         "You got it!",
-        "Hell yes!"
+        "Hell yes!",
+        "Alive and all that jive."
       );
       echo $responses[rand(0,3)];
     }
