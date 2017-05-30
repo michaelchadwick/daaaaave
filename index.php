@@ -24,6 +24,7 @@
         "response_type" => "in_channel",
         "text" => $responses[rand(0,3)]
       );
+      header('Content-type: application/json');
       echo json_encode($json);
     }
   } else {
