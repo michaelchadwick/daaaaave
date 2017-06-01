@@ -16,9 +16,15 @@
       $responses = array(
         "Yeah, Dave is with you, man.",
         "Damn right Dave is down.",
-        "You got it!",
-        "Hell yes!",
-        "Alive and all that jive."
+        "*You got it!*",
+        "*Hell yes!*",
+        "Alive and all that jive.",
+        "Dave has got your back.",
+        "I'm on my way.",
+        "Keep *rockin'*, and Dave will be there.",
+        "Just call me _Daaaaaaave_.",
+        "I'm feeling just the right amount of *Dave* today, buddy.",
+        "You rang?"
       );
       $json = array(
         "response_type" => "in_channel",
