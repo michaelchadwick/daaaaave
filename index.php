@@ -28,7 +28,7 @@
       );
       $json = array(
         "response_type" => "in_channel",
-        "text" => $responses[rand(0,3)]
+        "text" => $responses[rand(0,$responses.length-1)]
       );
       header('Content-type: application/json');
       echo json_encode($json);
