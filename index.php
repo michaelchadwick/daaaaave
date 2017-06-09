@@ -1,4 +1,5 @@
 <?php
+  header("Access-Control-Allow-Origin: *");
   if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['api'])) {
     header('Content-type: application/json');
     $json = array(
