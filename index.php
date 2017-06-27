@@ -16,6 +16,19 @@
     echo json_encode($data);
   } else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['slack'])) {
     if(isset($_GET['token']) && $_GET['token'] == 'lrq432zlxosmAbfsNNhhG6yc') {
+      $songs = array(
+        "Docking",
+        "Road Trip",
+        "Charlotte Said",
+        "Wondering Why",
+        "The Ladder",
+        "Fudge and Jam",
+        "Tattoo Fetish",
+        "Pinto",
+        "Scenes From My Window",
+        "Overjoyed",
+        "Beyond Today"
+      );
       $responses = array(
         "Yeah, Dave is with you, man.",
         "Damn right Dave is down.",
@@ -27,7 +40,8 @@
         "Keep *rockin'*, and Dave will be there.",
         "Just call me _Daaaaaaave_.",
         "I'm feeling just the right amount of *Dave* today, buddy.",
-        "You rang?"
+        "You rang?",
+        "Hey, just listening to _" . $songs[rand(0,count($songs)-1)] . "_ right now. It *rules*!"
       );
       $json = array(
         "response_type" => "in_channel",
