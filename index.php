@@ -2,7 +2,8 @@
   header("Access-Control-Allow-Origin: *");
   if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['api'])) {
     header('Content-type: application/json');
-    $json = array(
+
+    $data = array(
       "dave" => "YES!",
       "daave" => "YES!",
       "daaave" => "YES!",
@@ -11,7 +12,8 @@
       "daaaaaave" => "YES!",
       "daaaaaaave" => "YES!",
     );
-    echo json_encode($json);
+
+    echo json_encode($data);
   } else if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['slack'])) {
     if(isset($_GET['token']) && $_GET['token'] == 'lrq432zlxosmAbfsNNhhG6yc') {
       $responses = array(
