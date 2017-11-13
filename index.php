@@ -95,7 +95,6 @@
     function makeSpace(lines) {
       var elem, elem2;
       while(lines > 0) {
-        console.log(lines);
         elem = document.createElement('div');
         elem.classList.add('hidden');
         document.getElementById('wrap').appendChild(elem);
