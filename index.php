@@ -21,7 +21,7 @@
     // slack api call
     else if(isset($_GET['slack'])) {
       // got token
-      if(isset($_GET['token']) && $_GET['token'] == 'lrq432zlxosmAbfsNNhhG6yc') {
+      if(isset($_GET['token']) && $_GET['token'] == $_ENV['DAVE_SLACK_TOKEN']) {
         $songs = array(
           'Docking',
           'Road Trip',
