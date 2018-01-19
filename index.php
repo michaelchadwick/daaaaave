@@ -1,4 +1,11 @@
 <?php
+  require __DIR__ . '/vendor/autoload.php';
+
+  $dotenv = new Dotenv\Dotenv(__DIR__);
+  $dotenv->load();
+
+  $localToken = $_ENV['DAVE_SLACK_TOKEN'];
+
   header('Access-Control-Allow-Origin: *');
   // make sure it's a GET
   if($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -26,7 +33,7 @@
       // got token
       if(isset($_GET['token'])) {
         // token matches
-        if($_GET['token'] == $_ENV["DAVE_SLACK_TOKEN"]) {
+        if($_GET['token'] == $localToken) {
           $songs = array(
             'Docking',
             'Road Trip',
