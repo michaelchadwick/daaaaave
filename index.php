@@ -5,8 +5,9 @@
 
   $dotenv = new Dotenv\Dotenv(__DIR__);
   $dotenv->load();
+  $dotenv->required('DAVE_SLACK_TOKEN');
 
-  $localToken = $_ENV['DAVE_SLACK_TOKEN'];
+  $tokenInt = getenv('DAVE_SLACK_TOKEN');
 
   header('Access-Control-Allow-Origin: *');
   header('Content-type: application/json');
@@ -42,10 +43,12 @@
     }
     // slack api call
     else if(isset($_GET['slack'])) {
-      // got token
-      if(isset($_GET['token'])) {
+      $tokenExt = $_GET['token'];
+
+      // did we get a token?
+      if(isset($token)) {
         // token matches
-        if($_GET['token'] == $localToken) {
+        if($tokenExt == $tokenInt) {
           $songs = array(
             'Docking',
             'Road Trip',
@@ -105,7 +108,7 @@
         );
       }
     }
-    // no api or slack
+    // regular http request; needs to be api
     else {
       $json = array(
         "message" => "Dave says: 'Try the API instead, guy.'",
