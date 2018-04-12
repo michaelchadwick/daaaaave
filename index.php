@@ -11,7 +11,7 @@
   $tokenInt = getenv('DAVE_SLACK_TOKEN');
 
   header('Access-Control-Allow-Origin: *');
-  header('Content-type: application/json');
+  header('Content-type: application/json; charset=utf-8');
 
   // make sure it's a GET
   if($_SERVER['REQUEST_METHOD'] == 'GET') {
