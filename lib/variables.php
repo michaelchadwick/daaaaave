@@ -17,7 +17,11 @@ $songs = array(
   'Unwound String',
   'Slow Boat',
   'Down and Out',
-  'Humanity'
+  'Humanity',
+  'Down and Out',
+  'Anodyne Blues',
+  'Gains Gotten Ill',
+  'Zepslider'
 );
 $responses = array(
   'Uh, that\'s *David* to you. Heh. Just kidding! Dave is fine.',
@@ -37,6 +41,9 @@ $responses = array(
   'Just call me _Daaaaaaave_.',
   'I\'m feeling just the right amount of *Dave* today, buddy.',
   'You rang?',
-  'Hey, just listening to _' . $songs[rand(0,count($songs)-1)] . '_ right now. It *rules*!'
+  'Hey, just listening to _' . $songs[rand(0,count($songs)-1)] . '_ right now. It *rules*!',
+  'I\'m still here.',
+  'What\'s shakin\', bacon?',
+  'Go for Dave.'
 );
 ?>
