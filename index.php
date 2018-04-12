@@ -1,40 +1,43 @@
 <?php
   require __DIR__ . '/vendor/autoload.php';
 
+  $DAVE_LIMIT_COUNT_DEFAULT = 10;
+
   $dotenv = new Dotenv\Dotenv(__DIR__);
   $dotenv->load();
 
   $localToken = $_ENV['DAVE_SLACK_TOKEN'];
 
   header('Access-Control-Allow-Origin: *');
+  header('Content-type: application/json');
+
   // make sure it's a GET
   if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // plain API call
     if(isset($_GET['api'])) {
-      header('Content-type: application/json');
+      $daveArray = [];
+      $daveLimitCount = $_GET['daves'];
+      $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
 
-      $dave = [];
-      $daves = $_GET['daves'];
-      $dave_count = 10;
-
-      if (isset($daves)) {
-          if (is_numeric($daves) && $daves > 0) {
-              $dave_count = $_GET['daves'];
-          }
+      // optionally limit number of daves returned
+      if (isset($daveLimitCount) && $daveLimitCount > 0) {
+        $daveCount = $_GET['daves'];
       }
 
-      for($i = 0; $i < $dave_count; $i++) {
-        $dave[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
+      // build dave array
+      for($i = 0; $i < $daveCount; $i++) {
+        $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
       }
 
-      // random dave
-      if(isset($_GET['random'])) {
-        $index = rand(0, count($dave) - 1);
-        echo $dave[$index];
+      // if randomized, pick one dave amongst the many
+      $random = isset($_GET['random']);
+      if(isset($random) && $random > 0) {
+        $index = rand(0, count($daveArray) - 1);
+        $json = $daveArray[$index];
       }
-      // all dave
+      // otherwise, return all the daves
       else {
-        echo json_encode($dave);
+        $json = $daveArray;
       }
     }
     // slack api call
@@ -85,24 +88,37 @@
           );
           $json = array(
             'response_type' => 'in_channel',
-            'text' => $responses[rand(0,count($responses)-1)]
+            'text' => $responses[rand(0, count($responses) - 1)]
           );
-          header('Content-type: application/json');
-          echo json_encode($json);
         }
-        // token does not match
+        // invalid token
         else {
-          echo 'Dave says: "What? I didn\'t understand that, dude."';
+          $json = array(
+            "message" => "Dave says: 'What? I didn't understand that, dude.'"
+          );
         }
       }
-      // no token
+      // missing token
       else {
-        echo 'Dave says: "Eh? I don\'t think I know you, guy."';
+        $json = array(
+          "message" => "Dave says: 'Eh? I don't think I know you, buddy.'"
+        );
       }
     }
-    // no api or slack, so html
+    // no api or slack
     else {
-      echo '<p>Try the <a href="/?api=1">API</a> instead.</p>';
+      $json = array(
+        "message" => "Dave says: 'Try the API instead, guy.'",
+        "link" => "?api=1"
+      );
     }
+  } else {
+    // some other HTTP request
+    $json = array(
+      "message" => "Dave says: 'I don't respond to that kind of talk, man.'"
+    );
   }
+
+  // return json of some sort
+  echo json_encode($json);
 ?>
