@@ -14,7 +14,16 @@
       header('Content-type: application/json');
 
       $dave = [];
-      for($i = 0; $i < 40; $i++) {
+      $daves = $_GET['daves'];
+      $dave_count = 10;
+
+      if (isset($daves)) {
+          if (is_numeric($daves) && $daves > 0) {
+              $dave_count = $_GET['daves'];
+          }
+      }
+
+      for($i = 0; $i < $dave_count; $i++) {
         $dave[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
       }
 
