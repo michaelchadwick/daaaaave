@@ -1,3 +1,4 @@
 # daaaaaave
 
-Is Dave Still With Us?
+Need a simple web API for testing such functionalities? Ask Dave.
+
