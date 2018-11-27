@@ -20,6 +20,10 @@
       $daveArray = [];
       $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
 
+      if (isset($_GET['error'])) {
+        return false;
+      }
+
       // optionally limit number of daves returned
       if (isset($_GET['daves'])) {
         if ($_GET['daves'] > 0) {
