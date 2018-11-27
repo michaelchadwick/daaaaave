@@ -21,7 +21,7 @@
       $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
 
       if (isset($_GET['error'])) {
-        return new Exception('You want an exception? This is how you get an exception.');
+        return new ResponseError(ResponseError::STATUS_INTERNAL_SERVER_ERROR, 'You want an error? This is how you get an error.');
       }
 
       // optionally limit number of daves returned
