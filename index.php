@@ -18,12 +18,13 @@
     // plain API call
     if(isset($_GET['api'])) {
       $daveArray = [];
-      $daveLimitCount = $_GET['daves'];
       $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
 
       // optionally limit number of daves returned
-      if (isset($daveLimitCount) && $daveLimitCount > 0) {
-        $daveCount = $_GET['daves'];
+      if (isset($_GET['daves'])) {
+        if ($_GET['daves'] > 0) {
+          $daveCount = $_GET['daves'];
+        }
       }
 
       // build dave array
