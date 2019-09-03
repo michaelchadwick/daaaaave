@@ -6,9 +6,6 @@
 
   $dotenv = new Dotenv\Dotenv(__DIR__);
   $dotenv->load();
-  $dotenv->required('DAVE_SLACK_TOKEN');
-
-  $tokenInt = getenv('DAVE_SLACK_TOKEN');
 
   header('Access-Control-Allow-Origin: *');
   header('Content-type: application/json; charset=utf-8');
@@ -17,6 +14,40 @@
   if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // plain API call
     if(isset($_GET['api'])) {
+
+      // if requesting sample, check size
+      if (isset($_GET['sample'])) {
+        header('Cache-Control: must-revalidate');
+        header('Content-Description: File Transfer');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Type: application/force-download');
+        header('Expires: 0');
+        header('Pragma: public');
+
+        $sample = $_GET['sample'];
+
+        switch ($sample) {
+          case '100':
+            $filepath = './sample100.json';
+            break;
+          case '1000':
+            $filepath = './sample1000.json';
+            break;
+          case '10000':
+            $filepath = './sample10000.json';
+            break;
+          default:
+            $filepath = './sample100.json';
+            break;
+        }
+
+        header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+        header('Content-Length: ' . filesize($filepath));
+        flush(); // Flush system output buffer
+        readfile($filepath);
+        exit;
+      }
+
       $daveArray = [];
       $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
 
@@ -36,21 +67,12 @@
         $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
       }
 
-      // if randomized, pick one dave amongst the many
-      $random = isset($_GET['random']);
-      if(isset($random) && $random > 0) {
-        $index = rand(0, count($daveArray) - 1);
-        $json = array(
-          "text" => $daveArray[$index]
-        );
-      }
-      // otherwise, return all the daves
-      else {
-        $json = $daveArray;
-      }
+      $json = $daveArray;
     }
     // slack api call
     else if(isset($_GET['slack'])) {
+      $dotenv->required('DAVE_SLACK_TOKEN');
+      $tokenInt = getenv('DAVE_SLACK_TOKEN');
       $tokenExt = $_GET['token'];
 
       // did we get a token?
@@ -80,7 +102,7 @@
     else {
       $json = array(
         "text" => "Dave says: 'Try the API instead, guy.'",
-        "link" => "?api=1"
+        "link" => "?api"
       );
     }
   } else {
