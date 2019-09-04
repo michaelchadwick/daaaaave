@@ -1,4 +1,8 @@
 {
+    "name": "michaelchadwick/dave.codana.me",
+    "license": "MIT",
+    "type": "project",
+    "description": "Dave API",
     "require-dev": {
         "vlucas/phpdotenv": "^2.4"
     },

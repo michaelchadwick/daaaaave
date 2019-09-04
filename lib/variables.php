@@ -1,4 +1,5 @@
 <?php
+$DAVE_LIMIT_COUNT_DEFAULT = 10;
 $songs = array(
   'Docking',
   'Road Trip',

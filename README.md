@@ -6,7 +6,7 @@ Need a simple web API for testing such functionalities? Ask Dave.
 
 ### daves
 
-`/?api`
+`/api`
 
 returns an array of (10) daves:
 
@@ -25,7 +25,7 @@ returns an array of (10) daves:
 ]
 ```
 
-`/?api&daves=5`
+`/api/?daves=5`
 
 returns an array of (5) daves:
 
@@ -41,11 +41,11 @@ returns an array of (5) daves:
 
 ### Files
 
-`/?api&file&type=data&size=10`
+`/api/?file&type=data&size=10`
 
 returns a 10MB binary file called `10mb`
 
-`/?api&file&type=json`
+`/api/?file&type=json`
 
 returns random json data:
 
@@ -68,7 +68,7 @@ returns random json data:
 }
 ```
 
-`/?api&file&type=text&size=100`
+`/api/?file&type=text&size=100`
 
 returns 100 names as text:
 
