@@ -1,4 +1,6 @@
 <?php
+  global $responses;
+
   require __DIR__ . '/vendor/autoload.php';
   require __DIR__ . '/lib/variables.php';
 
@@ -14,9 +16,8 @@
   if($_SERVER['REQUEST_METHOD'] == 'GET') {
     // plain API call
     if(isset($_GET['api'])) {
-
-      // if requesting sample, check size
-      if (isset($_GET['sample'])) {
+      // if file, check type
+      if (isset($_GET['file'])) {
         header('Cache-Control: must-revalidate');
         header('Content-Description: File Transfer');
         header('Content-Transfer-Encoding: binary');
@@ -24,27 +25,67 @@
         header('Expires: 0');
         header('Pragma: public');
 
-        $sample = $_GET['sample'];
+        if (isset($_GET['type'])) {
+          $fileType = $_GET['type'];
 
-        switch ($sample) {
-          case '100':
-            $filepath = './sample100.json';
-            break;
-          case '1000':
-            $filepath = './sample1000.json';
-            break;
-          case '10000':
-            $filepath = './sample10000.json';
-            break;
-          default:
-            $filepath = './sample100.json';
-            break;
+          switch ($fileType) {
+            case 'data':
+              $size = $_GET['size'];
+
+              switch ($size) {
+                case '100':
+                  $filePath = './assets/data/100mb';
+                  break;
+                case '1000':
+                  $filePath = './assets/data/1000mb';
+                  break;
+                default:
+                  $filePath = './assets/data/10mb';
+                  break;
+              }
+              break;
+            case 'json':
+              $size = $_GET['size'];
+
+              switch ($size) {
+                case '1000':
+                  $filePath = './assets/json/1000.json';
+                  break;
+                case '10000':
+                  $filePath = './assets/json/10000.json';
+                  break;
+                default:
+                  $filePath = './assets/json/100.json';
+                  break;
+              }
+              break;
+            case 'text':
+              $size = $_GET['size'];
+
+              switch ($size) {
+                case '100':
+                  $filePath = './assets/text/100.txt';
+                  break;
+                case '1000':
+                  $filePath = './assets/text/1000.txt';
+                  break;
+                case '10000':
+                  $filePath = './assets/text/10000.txt';
+                  break;
+                default:
+                  $filePath = './assets/text/10.txt';
+                  break;
+              }
+              break;
+          }
         }
 
-        header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
-        header('Content-Length: ' . filesize($filepath));
+        $filePath = './assets/oops.txt';
+
+        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        header('Content-Length: ' . filesize($filePath));
         flush(); // Flush system output buffer
-        readfile($filepath);
+        readfile($filePath);
         exit;
       }
 

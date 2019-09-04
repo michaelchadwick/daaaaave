@@ -1,2 +1,5 @@
+# don't track data assets (files too big)
+assets/data/*
+
 # don't track composer stuff
 vendor/*
