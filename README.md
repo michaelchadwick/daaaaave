@@ -51,19 +51,20 @@ returns random json data:
 
 ``` json
 {
-"items": [
-  {
-  "index": 1,
-  "index_start_at": 56,
-  "integer": 40,
-  "float": 12.041,
-  "name": "Elsie",
-  "surname": "Horn",
-  "fullname": "Hazel Petersen",
-  "email": "dana@o.il",
-  "bool": true
-  },
-  ...
+  "items": [
+    {
+      "index": 1,
+      "index_start_at": 56,
+      "integer": 40,
+      "float": 12.041,
+      "name": "Elsie",
+      "surname": "Horn",
+      "fullname": "Hazel Petersen",
+      "email": "dana@o.il",
+      "bool": true
+    },
+    ...
+  ]
 }
 ```
 
