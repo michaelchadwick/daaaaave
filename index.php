@@ -120,6 +120,9 @@
             echo file_get_contents($filePath);
             exit();
           case 'text':
+            header('Content-Description: File Transfer');
+            header('Content-Type: text/plain');
+
             $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
             switch ($size) {
@@ -140,10 +143,11 @@
                 break;
             }
 
-            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            // header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
             header('Content-Length: ' . filesize($filePath));
             flush(); // Flush system output buffer
-            readfile($filePath);
+            echo file_get_contents($filePath);
+            // header('Content-Disposition: inline');
             exit();
           default:
             header('HTTP/1.1 400 Bad Request');
