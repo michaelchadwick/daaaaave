@@ -17,8 +17,6 @@
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri = explode('/', $uri);
 
-  # print_r($uri); die;
-
   // all requests must start with /api
   if ($uri[1] !== 'api') {
     header('HTTP/1.1 400 Bad Request');
@@ -32,7 +30,8 @@
     exit();
   }
 
-  // slack api call
+  # slack api call - return data to slack, exit
+
   if (isset($_GET['slack'])) {
     $dotenv->required('DAVE_SLACK_TOKEN');
     $tokenInt = getenv('DAVE_SLACK_TOKEN');
@@ -60,118 +59,127 @@
         'text' => 'Dave says: \'Eh? I don\'t think I know you, buddy.\''
       ));
     }
+
+    exit();
   }
-  // regular api call
-  else {
-    // if file, check type and size, return file, exit
-    if (isset($_GET['file'])) {
-      if (isset($_GET['type'])) {
-        $fileType = $_GET['type'];
 
-        switch ($fileType) {
-          case 'data':
-            header('Content-Description: File Transfer');
-            header('Content-Transfer-Encoding: binary');
-            header('Content-Type: application/force-download');
+  # regular api call
 
-            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+  // if file, check type and size, return file, exit
+  if (isset($_GET['file'])) {
+    if (isset($_GET['type'])) {
+      $fileType = $_GET['type'];
 
-            switch ($size) {
-              case '10':
-                $filePath = './assets/data/10mb';
-                break;
-              case '100':
-                $filePath = './assets/data/100mb';
-                break;
-              case '1000':
-                $filePath = './assets/data/1000mb';
-                break;
-              default:
-                $filePath = './assets/data/1mb';
-                break;
-            }
+      switch ($fileType) {
+        case 'data':
+          header('Content-Description: File Transfer');
+          header('Content-Transfer-Encoding: binary');
+          header('Content-Type: application/force-download');
 
-            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-            header('Content-Length: ' . filesize($filePath));
-            flush(); // Flush system output buffer
-            readfile($filePath);
-            exit();
-          case 'json':
-            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
-            switch ($size) {
-              case '10':
-                $filePath = './assets/json/10.json';
-                break;
-              case '100':
-                $filePath = './assets/json/100.json';
-                break;
-              case '1000':
-                $filePath = './assets/json/1000.json';
-                break;
-              case '10000':
-                $filePath = './assets/json/10000.json';
-                break;
-              default:
-                $filePath = './assets/json/1.json';
-                break;
-            }
+          switch ($size) {
+            case '10':
+              $filePath = './assets/data/10mb';
+              break;
+            case '100':
+              $filePath = './assets/data/100mb';
+              break;
+            case '1000':
+              $filePath = './assets/data/1000mb';
+              break;
+            default:
+              $filePath = './assets/data/1mb';
+              break;
+          }
 
-            echo file_get_contents($filePath);
-            exit();
-          case 'text':
-            header('Content-Description: File Transfer');
-            header('Content-Type: text/plain');
+          header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+          header('Content-Length: ' . filesize($filePath));
+          flush(); // Flush system output buffer
+          readfile($filePath);
+          exit();
+        case 'json':
+          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
-            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+          switch ($size) {
+            case '10':
+              $filePath = './assets/json/10.json';
+              break;
+            case '100':
+              $filePath = './assets/json/100.json';
+              break;
+            case '1000':
+              $filePath = './assets/json/1000.json';
+              break;
+            case '10000':
+              $filePath = './assets/json/10000.json';
+              break;
+            default:
+              $filePath = './assets/json/1.json';
+              break;
+          }
 
-            switch ($size) {
-              case '10':
-                $filePath = './assets/text/10.txt';
-                break;
-              case '100':
-                $filePath = './assets/text/100.txt';
-                break;
-              case '1000':
-                $filePath = './assets/text/1000.txt';
-                break;
-              case '10000':
-                $filePath = './assets/text/10000.txt';
-                break;
-              default:
-                $filePath = './assets/text/1.txt';
-                break;
-            }
+          echo file_get_contents($filePath);
+          exit();
+        case 'text':
+          header('Content-Description: File Transfer');
+          header('Content-Type: text/plain');
 
-            header('Content-Length: ' . filesize($filePath));
-            flush(); // Flush system output buffer
-            echo file_get_contents($filePath);
-            exit();
-          default:
-            header('HTTP/1.1 400 Bad Request');
-            echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
-            exit();
-        }
-      } else {
-        header('HTTP/1.1 400 Bad Request');
-        echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
-        exit();
+          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+
+          switch ($size) {
+            case '10':
+              $filePath = './assets/text/10.txt';
+              break;
+            case '100':
+              $filePath = './assets/text/100.txt';
+              break;
+            case '1000':
+              $filePath = './assets/text/1000.txt';
+              break;
+            case '10000':
+              $filePath = './assets/text/10000.txt';
+              break;
+            default:
+              $filePath = './assets/text/1.txt';
+              break;
+          }
+
+          header('Content-Length: ' . filesize($filePath));
+          flush(); // Flush system output buffer
+          echo file_get_contents($filePath);
+          exit();
+        default:
+          header('HTTP/1.1 400 Bad Request');
+          echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+          exit();
       }
-
-
+    } else {
+      header('HTTP/1.1 400 Bad Request');
+      echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+      exit();
     }
 
-    // else, we are returning a json array of daves
-    $daveArray = [];
-    $daveCount = (isset($_GET['daves']) && $_GET['daves'] > 0)
-      ? $_GET['daves']
-      : $DAVE_LIMIT_COUNT_DEFAULT;
 
-    // build dave array
-    for($i = 0; $i < $daveCount; $i++) {
-      $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
-    }
-
-    echo json_encode($daveArray);
   }
+
+  // else, we are returning a json array of daves
+  $daveArray = [];
+  $daveCount = $DAVE_LIMIT_COUNT_DEFAULT;
+
+  // grab potential filter and adjust amount of daves
+  if (isset($_GET['dave']) || isset($_GET['daves'])) {
+    $daveCount = isset($_GET['dave']) ? $_GET['dave'] : $_GET['daves'];
+
+    if ($daveCount < 0) $daveCount = 0;
+  }
+
+  // build dave array
+  for($i = 0; $i < $daveCount; $i++) {
+    $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
+  }
+
+  echo json_encode($daveArray);
+
+  exit();
 ?>
