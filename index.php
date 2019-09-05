@@ -143,11 +143,9 @@
                 break;
             }
 
-            // header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
             header('Content-Length: ' . filesize($filePath));
             flush(); // Flush system output buffer
             echo file_get_contents($filePath);
-            // header('Content-Disposition: inline');
             exit();
           default:
             header('HTTP/1.1 400 Bad Request');
