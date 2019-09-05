@@ -90,11 +90,19 @@
                 $filePath = './assets/data/1mb';
                 break;
             }
-            break;
+
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Content-Length: ' . filesize($filePath));
+            flush(); // Flush system output buffer
+            readfile($filePath);
+            exit();
           case 'json':
             $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 100;
 
             switch ($size) {
+              case '100':
+                $filePath = './assets/json/100.json';
+                break;
               case '1000':
                 $filePath = './assets/json/1000.json';
                 break;
@@ -102,10 +110,12 @@
                 $filePath = './assets/json/10000.json';
                 break;
               default:
-                $filePath = './assets/json/100.json';
+                $filePath = './assets/json/10.json';
                 break;
             }
-            break;
+
+            echo file_get_contents($filePath);
+            exit();
           case 'text':
             $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 10;
 
@@ -123,7 +133,12 @@
                 $filePath = './assets/text/10.txt';
                 break;
             }
-            break;
+
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Content-Length: ' . filesize($filePath));
+            flush(); // Flush system output buffer
+            readfile($filePath);
+            exit();
           default:
             header('HTTP/1.1 400 Bad Request');
             echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
@@ -135,11 +150,7 @@
         exit();
       }
 
-      header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-      header('Content-Length: ' . filesize($filePath));
-      flush(); // Flush system output buffer
-      readfile($filePath);
-      exit;
+
     }
 
     // else, we are returning a json array of daves
