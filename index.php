@@ -97,9 +97,12 @@
             readfile($filePath);
             exit();
           case 'json':
-            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 100;
+            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
             switch ($size) {
+              case '10':
+                $filePath = './assets/json/10.json';
+                break;
               case '100':
                 $filePath = './assets/json/100.json';
                 break;
@@ -110,16 +113,19 @@
                 $filePath = './assets/json/10000.json';
                 break;
               default:
-                $filePath = './assets/json/10.json';
+                $filePath = './assets/json/1.json';
                 break;
             }
 
             echo file_get_contents($filePath);
             exit();
           case 'text':
-            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 10;
+            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
             switch ($size) {
+              case '10':
+                $filePath = './assets/text/10.txt';
+                break;
               case '100':
                 $filePath = './assets/text/100.txt';
                 break;
@@ -130,7 +136,7 @@
                 $filePath = './assets/text/10000.txt';
                 break;
               default:
-                $filePath = './assets/text/10.txt';
+                $filePath = './assets/text/1.txt';
                 break;
             }
 
