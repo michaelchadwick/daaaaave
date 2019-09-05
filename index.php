@@ -21,19 +21,14 @@
 
   // all requests must start with /api
   if ($uri[1] !== 'api') {
-    header('HTTP/1.1 404 Not Found');
+    header('HTTP/1.1 400 Bad Request');
+    echo json_encode(array('message' => 'Dave says: Try using the actual api, dude. https://dave.codana.me/api'));
     exit();
   }
 
   // all requests must be GET
   if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     header('HTTP/1.1 405 Method Not Allowed');
-    exit();
-  }
-
-  // if error, return error immediately
-  if (isset($_GET['error'])) {
-    header('HTTP/1.1 400 You want an error? This is how you get an error.');
     exit();
   }
 
@@ -79,7 +74,7 @@
             header('Content-Transfer-Encoding: binary');
             header('Content-Type: application/force-download');
 
-            $size = $_GET['size'];
+            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
             switch ($size) {
               case '10':
@@ -97,7 +92,7 @@
             }
             break;
           case 'json':
-            $size = $_GET['size'];
+            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 100;
 
             switch ($size) {
               case '1000':
@@ -112,7 +107,7 @@
             }
             break;
           case 'text':
-            $size = $_GET['size'];
+            $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 10;
 
             switch ($size) {
               case '100':
@@ -129,9 +124,15 @@
                 break;
             }
             break;
+          default:
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+            exit();
         }
       } else {
-        $filePath = './assets/oops.txt';
+        header('HTTP/1.1 400 Bad Request');
+        echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+        exit();
       }
 
       header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
