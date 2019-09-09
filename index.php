@@ -24,8 +24,8 @@
     exit();
   }
 
-  // all requests must be GET
-  if ($_SERVER['REQUEST_METHOD'] !== 'GET' || $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
+  // all requests must be GET or OPTIONS
+  if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
     header('HTTP/1.1 405 Method Not Allowed');
     exit();
   }
