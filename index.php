@@ -82,6 +82,12 @@
             case '10':
               $filePath = './assets/data/10mb';
               break;
+            case '20':
+              $filePath = './assets/data/20mb';
+              break;
+            case '50':
+              $filePath = './assets/data/50mb';
+              break;
             case '100':
               $filePath = './assets/data/100mb';
               break;
