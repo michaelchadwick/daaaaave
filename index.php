@@ -75,6 +75,9 @@
           $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 0;
 
           switch ($size) {
+            case '1':
+              $filePath = './assets/data/1mb';
+              break;
             case '10':
               $filePath = './assets/data/10mb';
               break;
