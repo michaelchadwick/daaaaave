@@ -30,6 +30,35 @@
     exit();
   }
 
+  # is dave alive?
+  if (isset($_GET['isdavealive'])) {
+    $paths = [204, 302, 404, 410, 444];
+    $index = array_rand($paths);
+    # echo $paths[$index]; exit();
+
+    switch ($paths[$index]) {
+      case 204:
+        header('HTTP/1.1 204 Dave is Around...Somewhere');
+        echo json_encode(array('message' => 'Dave says: I\'m around here...somewhere.'));
+        exit();
+      case 302:
+        header('Location: http://caveerastudios.com/');
+        exit();
+      case 404:
+        header('HTTP/1.1 404 No Dave Here');
+        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        exit();
+      case 410:
+        header('HTTP/1.1 410 No Dave Here');
+        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        exit();
+      case 444:
+        header('HTTP/1.1 444 NginX Says: No Dave Here');
+        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        exit();
+    }
+  }
+
   # slack api call - return data to slack, exit
 
   if (isset($_GET['slack'])) {
