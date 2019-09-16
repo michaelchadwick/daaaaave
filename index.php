@@ -76,22 +76,22 @@
 
           switch ($size) {
             case '1':
-              $filePath = './assets/data/1mb';
+              $filePath = './assets/data/1mb_of_dave';
               break;
             case '10':
-              $filePath = './assets/data/10mb';
+              $filePath = './assets/data/10mb_of_dave';
               break;
             case '20':
-              $filePath = './assets/data/20mb';
+              $filePath = './assets/data/20mb_of_dave';
               break;
             case '50':
-              $filePath = './assets/data/50mb';
+              $filePath = './assets/data/50mb_of_dave';
               break;
             case '100':
-              $filePath = './assets/data/100mb';
+              $filePath = './assets/data/100mb_of_dave';
               break;
             case '1000':
-              $filePath = './assets/data/1000mb';
+              $filePath = './assets/data/1000mb_of_dave';
               break;
             default:
               header('HTTP/1.1 400 Bad Request');
