@@ -72,11 +72,7 @@
 
       switch ($fileType) {
         case 'data':
-          header('Content-Description: File Transfer');
-          header('Content-Transfer-Encoding: binary');
-          header('Content-Type: application/force-download');
-
-          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 0;
 
           switch ($size) {
             case '10':
@@ -95,10 +91,14 @@
               $filePath = './assets/data/1000mb';
               break;
             default:
-              $filePath = './assets/data/1mb';
-              break;
+              header('HTTP/1.1 400 Bad Request');
+              echo json_encode(array('message' => 'Dave says: That size ain\'t here, man.'));
+              exit();
           }
 
+          header('Content-Description: File Transfer');
+          header('Content-Transfer-Encoding: binary');
+          header('Content-Type: application/force-download');
           header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
           header('Content-Length: ' . filesize($filePath));
           flush(); // Flush system output buffer
@@ -165,8 +165,6 @@
       echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
       exit();
     }
-
-
   }
 
   // else, we are returning a json array of daves
