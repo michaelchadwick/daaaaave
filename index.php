@@ -157,7 +157,7 @@
           exit();
         default:
           header('HTTP/1.1 400 Bad Request');
-          echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+          echo json_encode(array('message' => 'You did not specify a valid file type! https://dave.codana.me/api?file&type=[data|json|text]'));
           exit();
       }
     } else {
