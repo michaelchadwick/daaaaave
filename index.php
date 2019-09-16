@@ -111,6 +111,9 @@
           $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
           switch ($size) {
+            case '1':
+              $filePath = './assets/json/1.json';
+              break;
             case '10':
               $filePath = './assets/json/10.json';
               break;
@@ -124,8 +127,9 @@
               $filePath = './assets/json/10000.json';
               break;
             default:
-              $filePath = './assets/json/1.json';
-              break;
+              header('HTTP/1.1 400 Bad Request');
+              echo json_encode(array('message' => 'Dave says: That size ain\'t here, man.'));
+              exit();
           }
 
           echo file_get_contents($filePath);
