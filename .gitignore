@@ -1,2 +1,4 @@
 # don't track data assets (files too big)
 assets/data/*
+# but please track icons
+!assets/icons/
