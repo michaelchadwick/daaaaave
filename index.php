@@ -17,6 +17,12 @@
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri = explode('/', $uri);
 
+  // all requests must be GET or OPTIONS
+  if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
+    header('HTTP/1.1 405');
+    exit();
+  }
+
   // all requests must start with /api
   if ($uri[1] !== 'api') {
     header('HTTP/1.1 400 Bad Request');
@@ -24,10 +30,114 @@
     exit();
   }
 
-  // all requests must be GET or OPTIONS
-  if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
-    header('HTTP/1.1 405 Method Not Allowed');
-    exit();
+  if (isset($uri[2])) {
+    $code = $uri[2];
+
+    switch ($code) {
+      case 0:
+        header('HTTP/1.1 200');
+        echo json_encode(array(
+          'message' => 'Dave says: I am nothing.',
+          'status' => 200,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 200:
+        header('HTTP/1.1 200');
+        echo json_encode(array(
+          'message' => 'Dave says: Cool.',
+          'status' => 200,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 204:
+        header('HTTP/1.1 204');
+        echo json_encode(array(
+          'message' => 'Dave says: ...',
+          'status' => 204,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 302:
+        header('HTTP/1.1 302');
+        echo json_encode(array(
+          'message' => 'Dave says: I moved, man.',
+          'status' => 302,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 400:
+        header('HTTP/1.1 400');
+        echo json_encode(array(
+          'message' => 'Dave says: Bad to the bone, dude.',
+          'status' => 400,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 403:
+        header('HTTP/1.1 403');
+        echo json_encode(array(
+          'message' => 'Dave says: No way in.',
+          'status' => 403,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 404:
+        header('HTTP/1.1 404');
+        echo json_encode(array(
+          'message' => 'Dave says: I\'m not here, man.',
+          'status' => 404,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 405:
+        header('HTTP/1.1 405');
+        echo json_encode(array(
+          'message' => 'Dave says: I can\'t allow that here, guy.',
+          'status' => 405,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 410:
+        header('HTTP/1.1 410');
+        echo json_encode(array(
+          'message' => 'Dave says: I\'m not here, chum.',
+          'status' => 410,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 444:
+        header('HTTP/1.1 444');
+        echo json_encode(array(
+          'message' => 'Dave says: I ain\'t here, pal.',
+          'status' => 444,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 500:
+        header('HTTP/1.1 500');
+        echo json_encode(array(
+          'message' => 'Dave says: Shop\'s closed.',
+          'status' => 500,
+          'statusText' => 'OK'
+        ));
+        exit();
+      case 502:
+        header('HTTP/1.1 502');
+        echo json_encode(array(
+          'message' => 'Dave says: Shop\'s closed.',
+          'status' => 502,
+          'statusText' => 'OK'));
+        exit();
+      default:
+        header('HTTP/1.1 400 Bad Request');
+        echo json_encode(array(
+          'message' => 'Dave says: I don\'t get it?',
+          'status' => 400,
+          'statusText' => 'OK'
+        ));
+        exit();
+    }
   }
 
   # is dave alive?
@@ -38,18 +148,18 @@
 
     switch ($paths[$index]) {
       case 204:
-        header('HTTP/1.1 204 Dave is Around...Somewhere');
+        header('HTTP/1.1 204');
         echo json_encode(array('message' => 'Dave says: I\'m around here...somewhere.'));
         exit();
       case 302:
         header('Location: http://caveerastudios.com/');
         exit();
       case 404:
-        header('HTTP/1.1 404 No Dave Here');
+        header('HTTP/1.1 404');
         echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
         exit();
       case 410:
-        header('HTTP/1.1 410 No Dave Here');
+        header('HTTP/1.1 410');
         echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
         exit();
       case 444:
