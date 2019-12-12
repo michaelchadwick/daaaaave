@@ -20,13 +20,20 @@
   // all requests must be GET or OPTIONS
   if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'OPTIONS') {
     header('HTTP/1.1 405');
+    echo json_encode(new CustomError(array(
+      'message' => 'Dave says: Only got time for GETs and OPTIONSs, slick.',
+      'status' => 405
+    )));
     exit();
   }
 
   // all requests must start with /api
   if ($uri[1] !== 'api') {
     header('HTTP/1.1 400 Bad Request');
-    echo json_encode(array('message' => 'Dave says: Try using the actual api, dude. https://dave.codana.me/api'));
+    echo json_encode(new CustomError(array(
+      'message' => 'Dave says: Try using the actual api, dude. https://dave.codana.me/api',
+      'status' => 400
+    )));
     exit();
   }
 
@@ -35,107 +42,92 @@
 
     switch ($code) {
       case 0:
-        header('HTTP/1.1 200');
-        echo json_encode(array(
+        header('HTTP/1.1 500');
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: I am nothing.',
-          'status' => 200,
-          'statusText' => 'OK'
-        ));
+          'status' => 500,
+        )));
         exit();
       case 200:
         header('HTTP/1.1 200');
-        echo json_encode(array(
-          'message' => 'Dave says: Cool.',
-          'status' => 200,
-          'statusText' => 'OK'
-        ));
+        echo json_encode(new CustomError(array(
+          'message' => 'Dave says: Woo!'
+        )));
         exit();
       case 204:
         header('HTTP/1.1 204');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
+          'error' => false,
           'message' => 'Dave says: ...',
-          'status' => 204,
-          'statusText' => 'OK'
-        ));
+          'status' => 204
+        )));
         exit();
       case 302:
         header('HTTP/1.1 302');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
+          'error' => false,
           'message' => 'Dave says: I moved, man.',
-          'status' => 302,
-          'statusText' => 'OK'
-        ));
+          'status' => 302
+        )));
         exit();
       case 400:
         header('HTTP/1.1 400');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: Bad to the bone, dude.',
-          'status' => 400,
-          'statusText' => 'OK'
-        ));
+          'status' => 400
+        )));
         exit();
       case 403:
         header('HTTP/1.1 403');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: No way in.',
-          'status' => 403,
-          'statusText' => 'OK'
-        ));
+          'status' => 403
+        )));
         exit();
       case 404:
         header('HTTP/1.1 404');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: I\'m not here, man.',
-          'status' => 404,
-          'statusText' => 'OK'
-        ));
+          'status' => 404
+        )));
         exit();
       case 405:
         header('HTTP/1.1 405');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: I can\'t allow that here, guy.',
-          'status' => 405,
-          'statusText' => 'OK'
-        ));
+          'status' => 405
+        )));
         exit();
       case 410:
         header('HTTP/1.1 410');
-        echo json_encode(array(
-          'message' => 'Dave says: I\'m not here, chum.',
-          'status' => 410,
-          'statusText' => 'OK'
-        ));
+        echo json_encode(new CustomError(array(
+          'status' => 410
+        )));
         exit();
       case 444:
         header('HTTP/1.1 444');
-        echo json_encode(array(
-          'message' => 'Dave says: I ain\'t here, pal.',
-          'status' => 444,
-          'statusText' => 'OK'
-        ));
+        echo json_encode(new CustomError(array(
+          'status' => 444
+        )));
         exit();
       case 500:
         header('HTTP/1.1 500');
-        echo json_encode(array(
-          'message' => 'Dave says: Shop\'s closed.',
-          'status' => 500,
-          'statusText' => 'OK'
-        ));
+        echo json_encode(new CustomError(array(
+          'status' => 500
+        )));
         exit();
       case 502:
         header('HTTP/1.1 502');
-        echo json_encode(array(
-          'message' => 'Dave says: Shop\'s closed.',
-          'status' => 502,
-          'statusText' => 'OK'));
+        echo json_encode(new CustomError(array(
+          'status' => 502
+        )));
         exit();
       default:
         header('HTTP/1.1 400 Bad Request');
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'message' => 'Dave says: I don\'t get it?',
-          'status' => 400,
-          'statusText' => 'OK'
-        ));
+          'status' => 400
+        )));
         exit();
     }
   }
@@ -144,27 +136,39 @@
   if (isset($_GET['isdavealive'])) {
     $paths = [204, 302, 404, 410, 444];
     $index = array_rand($paths);
-    # echo $paths[$index]; exit();
 
     switch ($paths[$index]) {
       case 204:
         header('HTTP/1.1 204');
-        echo json_encode(array('message' => 'Dave says: I\'m around here...somewhere.'));
+        echo json_encode(new CustomError(array(
+          'error' => false,
+          'message' => 'Dave says: I\'m around here...somewhere.',
+          'status' => 204
+        )));
         exit();
       case 302:
         header('Location: http://caveerastudios.com/');
         exit();
       case 404:
         header('HTTP/1.1 404');
-        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        echo json_encode(new CustomError(array(
+          'message' => 'Dave says: I\'m not here, chum.',
+          'status' => 404
+        )));
         exit();
       case 410:
         header('HTTP/1.1 410');
-        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        echo json_encode(new CustomError(array(
+          'message' => 'Dave says: I\'m not here, chum.',
+          'status' => 410
+        )));
         exit();
       case 444:
         header('HTTP/1.1 444 NginX Says: No Dave Here');
-        echo json_encode(array('message' => 'Dave says: I\'m not here, chum.'));
+        echo json_encode(new CustomError(array(
+          'message' => 'Dave says: I\'m not here, chum.',
+          'status' => 444
+        )));
         exit();
     }
   }
@@ -180,23 +184,23 @@
     if (isset($tokenExt)) {
       // token matches
       if ($tokenExt == $tokenInt) {
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'response_type' => 'in_channel',
           'text' => $responses[rand(0, count($responses) - 1)]
-        ));
+        )));
       }
       // invalid token
       else {
-        echo json_encode(array(
+        echo json_encode(new CustomError(array(
           'text' => 'Dave says: \'What? I didn\'t understand that, dude.\''
-        ));
+        )));
       }
     }
     // missing token
     else {
-      echo json_encode(array(
+      echo json_encode(new CustomError(array(
         'text' => 'Dave says: \'Eh? I don\'t think I know you, buddy.\''
-      ));
+      )));
     }
 
     exit();
@@ -234,7 +238,10 @@
               break;
             default:
               header('HTTP/1.1 400 Bad Request');
-              echo json_encode(array('message' => 'Dave says: That size ain\'t here, man.'));
+              echo json_encode(new CustomError(array(
+                'message' => 'Dave says: That size ain\'t here, man.',
+                'status' => 400
+              )));
               exit();
           }
 
@@ -267,7 +274,10 @@
               break;
             default:
               header('HTTP/1.1 400 Bad Request');
-              echo json_encode(array('message' => 'Dave says: That size ain\'t here, man.'));
+              echo json_encode(new CustomError(array(
+                'message' => 'Dave says: That size ain\'t here, man.',
+                'status' => 400
+              )));
               exit();
           }
 
@@ -303,12 +313,18 @@
           exit();
         default:
           header('HTTP/1.1 400 Bad Request');
-          echo json_encode(array('message' => 'You did not specify a valid file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+          echo json_encode(new CustomError(array(
+            'message' => 'You did not specify a valid file type! https://dave.codana.me/api?file&type=[data|json|text]',
+            'status' => 400
+          )));
           exit();
       }
     } else {
       header('HTTP/1.1 400 Bad Request');
-      echo json_encode(array('message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]'));
+      echo json_encode(new CustomError(array(
+        'message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]',
+        'status' => 400
+      )));
       exit();
     }
   }
@@ -321,7 +337,9 @@
   if (isset($_GET['dave']) || isset($_GET['daves'])) {
     $daveCount = isset($_GET['dave']) ? $_GET['dave'] : $_GET['daves'];
 
-    if ($daveCount < 0) $daveCount = 0;
+    if ($daveCount < 0) {
+      $daveCount = 0;
+    }
   }
 
   // build dave array
@@ -329,7 +347,10 @@
     $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
   }
 
-  echo json_encode($daveArray);
+  echo json_encode(new CustomError(array(
+    'body' => $daveArray,
+    'error' => false
+  )));
 
   exit();
 ?>
