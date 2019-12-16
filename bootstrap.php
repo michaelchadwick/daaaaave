@@ -1,5 +1,5 @@
 <?php
-require 'lib/custom.error.php';
+require 'lib/custom.response.php';
 require 'lib/variables.php';
 require 'vendor/autoload.php';
 
