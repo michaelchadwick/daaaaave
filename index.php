@@ -83,7 +83,7 @@
 
     # regular api call
 
-    // e.g. api/?file&type=data|json|text
+    // e.g. api/?file&type=data|json|text&size=1|10|100|1000
     // if file, check type and size, return file, exit
     if (isset($_GET['file'])) {
       if (isset($_GET['type'])) {
