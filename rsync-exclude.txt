@@ -1,0 +1,9 @@
+.env
+.env.example
+.git
+.gitignore
+.prettierrc
+LICENSE.md
+README.md
+Rakefile
+rsync-exclude.txt

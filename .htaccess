@@ -1,2 +1,2 @@
-RewriteEngine on
-RewriteRule ^api index.php?api [QSA]
+#RewriteEngine on
+#RewriteRule ^api index.php?api [QSA]
