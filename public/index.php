@@ -17,7 +17,7 @@
   if ($uri[1] !== 'api') {
     header('HTTP/1.1 400 Bad Request');
     echo json_encode(new CustomResponse(array(
-      'message' => 'Dave says: Try using the actual api, dude. https://dave.codana.me/api',
+      'message' => 'Dave says: Try using the actual api, dude. https://dave.neb.host/api',
       'status' => 400
     )));
     exit();

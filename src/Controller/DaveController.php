@@ -259,7 +259,7 @@ class DaveController extends BaseController {
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
-              'message' => 'You did not specify a valid file type! https://dave.codana.me/api?file&type=[data|json|text]',
+              'message' => 'You did not specify a valid file type! https://dave.neb.host/api?file&type=[data|json|text]',
               'status' => 400
             )))
           );
@@ -268,7 +268,7 @@ class DaveController extends BaseController {
       header('HTTP/1.1 400 Bad Request');
       $this->sendOutput(
         json_encode(new CustomResponse(array(
-          'message' => 'You did not specify a file type! https://dave.codana.me/api?file&type=[data|json|text]',
+          'message' => 'You did not specify a file type! https://dave.neb.host/api?file&type=[data|json|text]',
           'status' => 400
         )))
       );
