@@ -57,14 +57,16 @@ class DaveController extends BaseController {
     'What\'s shakin\', bacon?',
     'Go for Dave.'
   );
+  private $qsParams;
 
   public function __construct () {
     $dotenv = new DotEnv(PROJECT_ROOT_PATH);
     $dotenv->load();
+
+    $this->qsParams = $this->getQueryStringParams();
   }
 
   public function processRequest() {
-    $qsParams = $this->getQueryStringParams();
     $allowedMethods = ['GET', 'OPTIONS'];
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
@@ -78,8 +80,9 @@ class DaveController extends BaseController {
       exit;
     }
 
+    // no empty requests
     if ($requestMethod == 'GET') {
-      if (!$qsParams) {
+      if (!$this->qsParams) {
         $this->sendOutput(
           json_encode(new CustomResponse(array(
             'message' => 'Dave says: I think you forgot to ask for something.',
@@ -92,25 +95,25 @@ class DaveController extends BaseController {
 
       // e.g. api/?slack
       // if slack call, return data to slack
-      if (isset($qsParams['slack'])) {
+      if (isset($this->qsParams['slack'])) {
         $this->_processSlack();
       }
 
       // e.g. api/?http_code&type=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
-      if (isset($qsParams['http_code'])) {
+      if (isset($this->qsParams['http_code'])) {
         $this->_processHttpCode();
       }
 
       // e.g. api/?file&type=data|json|text&size=1|10|100|1000
       // if file, check type and size, return file
-      if (isset($qsParams['file'])) {
+      if (isset($this->qsParams['file'])) {
         $this->_processFile();
       }
 
       // e.g., api/?daves=5
       // we are returning a json array of daves
-      if (isset($qsParams['dave']) || isset($qsParams['daves'])) {
+      if (isset($this->qsParams['dave']) || isset($this->qsParams['daves'])) {
         $this->_processDave();
       }
     } elseif ($requestMethod == 'OPTIONS') {
@@ -128,9 +131,11 @@ class DaveController extends BaseController {
     $daveCount = $this->DAVE_LIMIT_COUNT_DEFAULT;
 
     // grab potential filter and adjust amount of daves
-    if (isset($qsParams['dave']) || isset($qsParams['daves'])) {
-      echo "dave? " . $qsParams['dave']; exit;
-      $daveCount = isset($qsParams['dave']) ? $qsParams['dave'] : $qsParams['daves'];
+    if (isset($this->qsParams['dave'])) {
+      echo "dave? " . $this->qsParams['dave']; exit;
+    }
+    if (isset($this->qsParams['daves'])) {
+      $daveCount = $this->qsParams['daves'];
 
       if ($daveCount < 0) {
         $daveCount = 0;
@@ -152,8 +157,8 @@ class DaveController extends BaseController {
   }
 
   private function _processFile() {
-    if (isset($qsParams['type'])) {
-      $fileType = $qsParams['type'];
+    if (isset($this->qsParams['type'])) {
+      $fileType = $this->qsParams['type'];
 
       switch ($fileType) {
         case 'data':
@@ -259,7 +264,7 @@ class DaveController extends BaseController {
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
-              'message' => 'You did not specify a valid file type! https://dave.neb.host/api?file&type=[data|json|text]',
+              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[data|json|text]',
               'status' => 400
             )))
           );
@@ -268,7 +273,7 @@ class DaveController extends BaseController {
       header('HTTP/1.1 400 Bad Request');
       $this->sendOutput(
         json_encode(new CustomResponse(array(
-          'message' => 'You did not specify a file type! https://dave.neb.host/api?file&type=[data|json|text]',
+          'message' => 'You did not specify a file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[data|json|text]',
           'status' => 400
         )))
       );
@@ -276,8 +281,8 @@ class DaveController extends BaseController {
   }
 
   private function _processHttpCode() {
-    if (isset($qsParams['type'])) {
-      $code = $qsParams['type'];
+    if (isset($this->qsParams['type'])) {
+      $code = $this->qsParams['type'];
 
       switch ($code) {
         case 0:
@@ -386,7 +391,7 @@ class DaveController extends BaseController {
     } else {
       $this->sendOutput(
         json_encode(array(
-          'text' => 'Dave says: \'Eh? I don\'t think I know you, buddy.\''
+          'text' => 'Dave says: \'Eh? You didn\'t supply a code type, buddy.\''
         ))
       );
     }
@@ -394,8 +399,8 @@ class DaveController extends BaseController {
 
   private function _processSlack() {
     // did we get a Slack token?
-    if (isset($qsParams['token'])) {
-      $tokenExt = $qsParams['token'];
+    if (isset($this->qsParams['token'])) {
+      $tokenExt = $this->qsParams['token'];
 
       $this->dotenv->required('DAVE_SLACK_TOKEN');
       $tokenInt = getenv('DAVE_SLACK_TOKEN');
