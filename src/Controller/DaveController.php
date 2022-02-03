@@ -217,9 +217,6 @@ class DaveController extends BaseController {
             case '1000':
               $filePath = './assets/json/1000.json';
               break;
-            case '10000':
-              $filePath = './assets/json/10000.json';
-              break;
             default:
               header('HTTP/1.1 400 Bad Request');
               $this->sendOutput(
