@@ -102,7 +102,7 @@ class DaveController extends BaseController {
       // e.g. api/?http_code&type=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
       if (isset($this->qsParams['http_code'])) {
-        $this->_processHttpCode();
+        $this->_processHttpCode($this->qsParams['http_code']);
       }
 
       // e.g. api/?file&type=data|json|text&size=1|10|100|1000
@@ -119,7 +119,7 @@ class DaveController extends BaseController {
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
       echo json_encode(new CustomResponse(array(
-        'message' => 'Dave says: Current OPTIONS available - ?, ?file, ?http_code, ?slack',
+        'message' => 'Dave says: Current OPTIONS available - ?daves, ?file, ?http_code, ?slack',
         'status' => 200
       )));
       exit;
@@ -277,10 +277,7 @@ class DaveController extends BaseController {
     }
   }
 
-  private function _processHttpCode() {
-    if (isset($this->qsParams['type'])) {
-      $code = $this->qsParams['type'];
-
+  private function _processHttpCode($code) {
       switch ($code) {
         case 0:
           header('HTTP/1.1 500');
@@ -307,12 +304,21 @@ class DaveController extends BaseController {
               'status' => 204
             )))
           );
+        case 301:
+          header('HTTP/1.1 301');
+          $this->sendOutput(
+            json_encode(new CustomResponse(array(
+              'error' => false,
+              'message' => 'Dave says: I moved, man.',
+              'status' => 301
+            )))
+          );
         case 302:
           header('HTTP/1.1 302');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
               'error' => false,
-              'message' => 'Dave says: I moved, man.',
+              'message' => 'Dave says: I took a trip, man.',
               'status' => 302
             )))
           );
@@ -321,6 +327,14 @@ class DaveController extends BaseController {
           $this->sendOutput(
             json_encode(new CustomResponse(array(
               'message' => 'Dave says: Bad to the bone, dude.',
+              'status' => 400
+            )))
+          );
+        case 401:
+          header('HTTP/1.1 401');
+          $this->sendOutput(
+            json_encode(new CustomResponse(array(
+              'message' => 'Dave says: I can\'t do it, man. I lost my keys.',
               'status' => 400
             )))
           );
@@ -352,7 +366,16 @@ class DaveController extends BaseController {
           header('HTTP/1.1 410');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
+              'message' => 'Dave says: I\' seriously not here, dude.',
               'status' => 410
+            )))
+          );
+        case 418:
+          header('HTTP/1.1 418');
+          $this->sendOutput(
+            json_encode(new CustomResponse(array(
+              'message' => 'Dave says: I only do coffee.',
+              'status' => 418
             )))
           );
         case 444:
@@ -366,6 +389,7 @@ class DaveController extends BaseController {
           header('HTTP/1.1 500');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
+              'message' => 'Dave says: I can\'t process that one, buddy.',
               'status' => 500
             )))
           );
@@ -373,6 +397,7 @@ class DaveController extends BaseController {
           header('HTTP/1.1 502');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
+              'message' => 'Dave says: I tried asking around, but got gibberish.',
               'status' => 502
             )))
           );
@@ -380,18 +405,11 @@ class DaveController extends BaseController {
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I don\'t get it?',
+              'message' => 'Dave says: I don\'t know, uh, know that code.',
               'status' => 400
             )))
           );
       }
-    } else {
-      $this->sendOutput(
-        json_encode(array(
-          'text' => 'Dave says: \'Eh? You didn\'t supply a code type, buddy.\''
-        ))
-      );
-    }
   }
 
   private function _processSlack() {
