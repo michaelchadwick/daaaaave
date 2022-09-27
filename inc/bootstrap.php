@@ -23,19 +23,6 @@ header('Content-type: application/json; charset=UTF-8');
 header('Expires: 0');
 header('Pragma: public');
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode('/', $uri);
-
-// all requests must start with /api
-if ($uri[1] !== 'api') {
-  header('HTTP/1.1 400 Bad Request');
-  echo json_encode(new CustomResponse(array(
-    'message' => 'Dave says: Try using the actual api, dude: ' . $_SERVER['HTTP_HOST'] . '/api',
-    'status' => 400
-  )));
-  exit();
-}
-
 // pass the request method to the DaveController
 use Src\Controller\DaveController;
 $config = [];
