@@ -4,7 +4,7 @@
     "type": "project",
     "description": "Dave API",
     "require-dev": {
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^5.4"
     },
     "autoload": {
         "psr-4": {
