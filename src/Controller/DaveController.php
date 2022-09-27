@@ -60,7 +60,7 @@ class DaveController extends BaseController {
   private $qsParams;
 
   public function __construct () {
-    $dotenv = new DotEnv(PROJECT_ROOT_PATH);
+    $dotenv = Dotenv::createImmutable(PROJECT_ROOT_PATH);
     $dotenv->load();
 
     $this->qsParams = $this->getQueryStringParams();
