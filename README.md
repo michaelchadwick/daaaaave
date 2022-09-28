@@ -4,28 +4,30 @@ Need a simple web API for testing such functionalities? Ask Dave.
 
 ## Usage
 
-### daves
+### Base case
 
-`/api`
+`/`
 
-returns an array of (10) daves:
+returns JSON asking for more details
 
 ``` json
-[
-  "dave",
-  "daave",
-  "daaave",
-  "daaaave",
-  "daaaaave",
-  "daaaaaave",
-  "daaaaaaave",
-  "daaaaaaaave",
-  "daaaaaaaaave",
-  "daaaaaaaaaave"
-]
+{
+  "body": null,
+  "customType": "server",
+  "error": true,
+  "message": "Dave says: I think you forgot to ask for something.",
+  "status": "204",
+  "statusText": "OK"
+}
 ```
 
-`/api/?daves=5`
+### Daves
+
+`/?dave`
+
+returns a simple question: "dave?"
+
+`/?daves=5`
 
 returns an array of (5) daves:
 
@@ -41,11 +43,11 @@ returns an array of (5) daves:
 
 ### Files
 
-`/api/?file&type=data&size=10`
+`/?file&type=data&size=10`
 
 returns a 10MB binary file called `10mb`
 
-`/api/?file&type=json`
+`/?file&type=json`
 
 returns random json data:
 
@@ -68,7 +70,7 @@ returns random json data:
 }
 ```
 
-`/api/?file&type=text&size=100`
+`/?file&type=text&size=100`
 
 returns 100 names as text:
 
@@ -83,6 +85,23 @@ Marcker
 ...
 ```
 
-## Slack api key
+### HTTP Codes
+
+`/?http_code=404`
+
+returns an HTTP response with the chosen code and an appropriate message:
+
+``` json
+{
+  "body": null,
+  "customType": "server",
+  "error": true,
+  "message": "Dave says: I'm not here, man.",
+  "status": 404,
+  "statusText": "OK"
+}
+```
+
+### Slack api key
 
 Copy `.env.example` to `.env` and add in Dave's slack token...*if you know it*.
