@@ -1,14 +1,14 @@
 {
-    "name": "michaelchadwick/daaaaave",
-    "license": "MIT",
-    "type": "project",
-    "description": "Dave API",
-    "require-dev": {
-        "vlucas/phpdotenv": "^5.4"
-    },
-    "autoload": {
-        "psr-4": {
-            "Src\\": "src/"
-        }
+  "name": "michaelchadwick/daaaaave",
+  "license": "MIT",
+  "type": "project",
+  "description": "Dave API",
+  "require": {
+    "vlucas/phpdotenv": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Src\\": "src/"
     }
+  }
 }
