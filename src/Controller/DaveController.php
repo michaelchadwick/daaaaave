@@ -161,36 +161,19 @@ class DaveController extends BaseController {
       $fileType = $this->qsParams['type'];
 
       switch ($fileType) {
-        case 'data':
-          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 0;
+        case 'binary':
+          $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : 0;
 
-          switch ($size) {
-            case '1':
-              $filePath = './assets/data/1mb_of_dave';
-              break;
-            case '10':
-              $filePath = './assets/data/10mb_of_dave';
-              break;
-            case '20':
-              $filePath = './assets/data/20mb_of_dave';
-              break;
-            case '50':
-              $filePath = './assets/data/50mb_of_dave';
-              break;
-            case '100':
-              $filePath = './assets/data/100mb_of_dave';
-              break;
-            case '1000':
-              $filePath = './assets/data/1000mb_of_dave';
-              break;
-            default:
-              header('HTTP/1.1 400 Bad Request');
-              $this->sendOutput(
-                json_encode(new CustomResponse(array(
-                  'message' => 'Dave says: That size ain\'t here, man.',
-                  'status' => 400
-                )))
-              );
+          if ($sizeInMB > 100) $sizeInMB = 100; // max request 100 MB for now
+
+          $sizeInBytes = $sizeInMB * 1024 * 1024;
+          $filePath = './assets/binary/' . $sizeInMB . 'mb_of_dave';
+
+          if (PHP_OS_FAMILY == 'Darwin') {
+            shell_exec('head -c ' . $sizeInBytes . ' /dev/zero > ' . $filePath);
+          } else {
+            // creates a binary file of a specific size
+            shell_exec('fallocate -l ' . $sizeInBytes . ' ' . $filePath);
           }
 
           header('Content-Description: File Transfer');
@@ -200,6 +183,7 @@ class DaveController extends BaseController {
           header('Content-Length: ' . filesize($filePath));
           flush(); // Flush system output buffer
           readfile($filePath);
+          unlink($filePath);
           exit();
         case 'json':
           $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
@@ -233,35 +217,24 @@ class DaveController extends BaseController {
           header('Content-Description: File Transfer');
           header('Content-Type: text/plain');
 
-          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+          $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
-          switch ($size) {
-            case '10':
-              $filePath = './assets/text/10.txt';
-              break;
-            case '100':
-              $filePath = './assets/text/100.txt';
-              break;
-            case '1000':
-              $filePath = './assets/text/1000.txt';
-              break;
-            case '10000':
-              $filePath = './assets/text/10000.txt';
-              break;
-            default:
-              $filePath = './assets/text/1.txt';
-              break;
-          }
+          if ($sizeInLines > 100) $sizeInLines = 100; // max request 100 lines for now
+
+          $filePath = './assets/text/' . $sizeInLines . '.txt';
+
+          shell_exec('ruby ./assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath);
 
           header('Content-Length: ' . filesize($filePath));
           flush(); // Flush system output buffer
           echo file_get_contents($filePath);
+          unlink($filePath);
           exit();
         default:
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
-              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[data|json|text]',
+              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[binary|json|text]',
               'status' => 400
             )))
           );

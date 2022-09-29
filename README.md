@@ -43,9 +43,13 @@ returns an array of (5) daves:
 
 ### Files
 
-`/?file&type=data&size=10`
+#### Binary
 
-returns a 10MB binary file called `10mb`
+`/?file&type=binary&size=10`
+
+returns a 10 MB binary file called `10mb_of_dave`
+
+#### JSON
 
 `/?file&type=json`
 
@@ -70,9 +74,11 @@ returns random json data:
 }
 ```
 
+#### Text
+
 `/?file&type=text&size=100`
 
-returns 100 names as text:
+returns 100 random names as text:
 
 ``` text
 Cestz
