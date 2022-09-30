@@ -175,7 +175,7 @@ class DaveController extends BaseController {
           if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
 
           $sizeInBytes = $sizeInMB * 1024 * 1024;
-          $filePath = './tmp/' . $sizeInMB . 'mb_of_dave';
+          $filePath = '/tmp/' . $sizeInMB . 'mb_of_dave';
 
           if (PHP_OS_FAMILY == 'Darwin') {
             shell_exec('head -c ' . $sizeInBytes . ' /dev/zero > ' . $filePath);
@@ -233,7 +233,7 @@ class DaveController extends BaseController {
 
           if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
 
-          $filePath = './tmp/' . $sizeInLines . '.txt';
+          $filePath = '/tmp/' . $sizeInLines . '.txt';
 
           shell_exec('ruby ./assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath);
 
