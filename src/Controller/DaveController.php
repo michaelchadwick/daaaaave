@@ -170,6 +170,9 @@ class DaveController extends BaseController {
 
       switch ($fileType) {
         case 'binary':
+          header('Content-Description: File Transfer');
+          header('Content-Transfer-Encoding: binary');
+
           $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : $FILE_BIN_DEF_SIZE;
 
           if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
@@ -184,8 +187,6 @@ class DaveController extends BaseController {
             shell_exec('fallocate -l ' . $sizeInBytes . ' ' . $filePath);
           }
 
-          header('Content-Description: File Transfer');
-          header('Content-Transfer-Encoding: binary');
           header('Content-Type: application/force-download');
           header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
           header('Content-Length: ' . filesize($filePath));
@@ -195,6 +196,9 @@ class DaveController extends BaseController {
           exit();
 
         case 'json':
+          header('Content-Description: File Transfer');
+          header('Content-Type: text/json');
+
           $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
 
           if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
