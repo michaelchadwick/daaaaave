@@ -11,6 +11,10 @@ display_usage() {
   printf "  Usage: %s [NUMBER] (DEFAULT: %s)\n\n" "$(basename "$0")" $defcount
 }
 
+seq_formatted() {
+  printf "%04d" "$1"
+}
+
 random_integer() {
   shuf -i 1-"$1" -n 1
 }
@@ -47,7 +51,7 @@ items=()
 
 for i in $(seq "${1:-$1}")
 do
-  items+=("$(jo seq="$i" count="$(printf "%04d" "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
+  items+=("$(jo seq="$i" -s count="$(seq_formatted "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
 done
 
 jo items="$(jo -a "${items[@]}")"
