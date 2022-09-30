@@ -51,7 +51,7 @@ items=()
 
 for i in $(seq "${1:-$1}")
 do
-  items+=("$(jo seq="$i" -s count="$(seq_formatted "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
+  items+=("$(jo -- seq="$i" -s count="$(seq_formatted "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
 done
 
 jo items="$(jo -a "${items[@]}")"
