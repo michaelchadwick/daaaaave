@@ -8,8 +8,6 @@ use Dotenv\Dotenv;
 include PROJECT_ROOT_PATH . 'inc/config.php';
 
 class DaveController extends BaseController {
-
-  private $DAVE_LIMIT_COUNT_DEFAULT = 10;
   private $songs = array(
     'Docking',
     'Road Trip',
@@ -127,8 +125,11 @@ class DaveController extends BaseController {
   }
 
   private function _processDave() {
+    $DAVE_DEF_SIZE = 1;
+    $DAVE_MAX_SIZE = 1000;
+
     $daveArray = [];
-    $daveCount = $this->DAVE_LIMIT_COUNT_DEFAULT;
+    $daveCount = $DAVE_DEF_SIZE;
 
     // grab potential filter and adjust amount of daves
     if (isset($this->qsParams['dave'])) {
@@ -137,9 +138,8 @@ class DaveController extends BaseController {
     if (isset($this->qsParams['daves'])) {
       $daveCount = $this->qsParams['daves'];
 
-      if ($daveCount < 0) {
-        $daveCount = 0;
-      }
+      if ($daveCount <= 0) $daveCount = $DAVE_DEF_SIZE;
+      if ($daveCount > $DAVE_MAX_SIZE) $daveCount = $DAVE_MAX_SIZE;
     }
 
     // build dave array
@@ -157,14 +157,22 @@ class DaveController extends BaseController {
   }
 
   private function _processFile() {
+    $FILE_BIN_DEF_SIZE = 0;
+    $FILE_JSN_DEF_SIZE = 1;
+    $FILE_TXT_DEF_SIZE = 5;
+
+    $FILE_BIN_MAX_SIZE = 50;
+    $FILE_JSN_MAX_SIZE = 100;
+    $FILE_TXT_MAX_SIZE = 50;
+
     if (isset($this->qsParams['type'])) {
       $fileType = $this->qsParams['type'];
 
       switch ($fileType) {
         case 'binary':
-          $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : 0;
+          $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : $FILE_BIN_DEF_SIZE;
 
-          if ($sizeInMB > 100) $sizeInMB = 100; // max request 100 MB for now
+          if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
 
           $sizeInBytes = $sizeInMB * 1024 * 1024;
           $filePath = './assets/binary/' . $sizeInMB . 'mb_of_dave';
@@ -185,10 +193,13 @@ class DaveController extends BaseController {
           readfile($filePath);
           unlink($filePath);
           exit();
-        case 'json':
-          $size = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
 
-          switch ($size) {
+        case 'json':
+          $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
+
+          if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
+
+          switch ($sizeInItems) {
             case '1':
               $filePath = './assets/json/1.json';
               break;
@@ -213,13 +224,14 @@ class DaveController extends BaseController {
 
           echo file_get_contents($filePath);
           exit();
+
         case 'text':
           header('Content-Description: File Transfer');
           header('Content-Type: text/plain');
 
-          $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : 1;
+          $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_TXT_DEF_SIZE;
 
-          if ($sizeInLines > 100) $sizeInLines = 100; // max request 100 lines for now
+          if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
 
           $filePath = './assets/text/' . $sizeInLines . '.txt';
 
@@ -230,6 +242,7 @@ class DaveController extends BaseController {
           echo file_get_contents($filePath);
           unlink($filePath);
           exit();
+
         default:
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
