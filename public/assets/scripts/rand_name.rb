@@ -18,4 +18,5 @@ def pbcopy(arg)
   IO.popen('pbcopy', 'w') { |io| io.puts arg }
 end
 
-pbcopy names
+# copy to macOS clipboard if appropriate
+pbcopy names if RUBY_PLATFORM.include? 'darwin'
