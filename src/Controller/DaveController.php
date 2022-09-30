@@ -93,25 +93,25 @@ class DaveController extends BaseController {
         exit;
       }
 
-      // e.g. api/?slack
+      // e.g. /?slack
       // if slack call, return data to slack
       if (isset($this->qsParams['slack'])) {
         $this->_processSlack();
       }
 
-      // e.g. api/?http_code&type=0|2xx|3xx|4xx|5xx
+      // e.g. /?http_code&type=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
       if (isset($this->qsParams['http_code'])) {
         $this->_processHttpCode($this->qsParams['http_code']);
       }
 
-      // e.g. api/?file&type=data|json|text&size=1|10|100|1000
+      // e.g. /?file&type=data|json|text&size=1|10|100|1000
       // if file, check type and size, return file
       if (isset($this->qsParams['file'])) {
         $this->_processFile();
       }
 
-      // e.g., api/?daves=5
+      // e.g., /?daves=5
       // we are returning a json array of daves
       if (isset($this->qsParams['dave']) || isset($this->qsParams['daves'])) {
         $this->_processDave();
@@ -234,7 +234,7 @@ class DaveController extends BaseController {
           header('HTTP/1.1 400 Bad Request');
           $this->sendOutput(
             json_encode(new CustomResponse(array(
-              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[binary|json|text]',
+              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/?file&type=[binary|json|text]',
               'status' => 400
             )))
           );
@@ -243,7 +243,7 @@ class DaveController extends BaseController {
       header('HTTP/1.1 400 Bad Request');
       $this->sendOutput(
         json_encode(new CustomResponse(array(
-          'message' => 'You did not specify a file type! ' . $_SERVER['HTTP_HOST'] . '/api?file&type=[data|json|text]',
+          'message' => 'You did not specify a file type! ' . $_SERVER['HTTP_HOST'] . '/?file&type=[binary|json|text]',
           'status' => 400
         )))
       );
