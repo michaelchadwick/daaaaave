@@ -199,30 +199,14 @@ class DaveController extends BaseController {
 
           if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
 
-          switch ($sizeInItems) {
-            case '1':
-              $filePath = './assets/json/1.json';
-              break;
-            case '10':
-              $filePath = './assets/json/10.json';
-              break;
-            case '100':
-              $filePath = './assets/json/100.json';
-              break;
-            case '1000':
-              $filePath = './assets/json/1000.json';
-              break;
-            default:
-              header('HTTP/1.1 400 Bad Request');
-              $this->sendOutput(
-                json_encode(new CustomResponse(array(
-                  'message' => 'Dave says: That size ain\'t here, man.',
-                  'status' => 400
-                )))
-              );
-          }
+          $filePath = '/tmp/' . $sizeInItems . '.json';
 
+          shell_exec('sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath);
+
+          header('Content-Length: ' . filesize($filePath));
+          flush(); // Flush system output buffer
           echo file_get_contents($filePath);
+          unlink($filePath);
           exit();
 
         case 'text':
