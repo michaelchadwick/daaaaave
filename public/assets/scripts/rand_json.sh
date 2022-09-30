@@ -52,10 +52,9 @@ fi
 
 for i in $(seq "${1:-$defcount}")
 do
-  printf -v count2 "%04d" "$i"
   jo \
     seq="$i" \
-    -s count="$(printf "%04d" "$i")" \
+    count="$(printf "%04d" "$i")" \
     integer="$(random_integer 1000)" \
     float="$(random_float 1000)" \
     string="$(random_string 16)" \
