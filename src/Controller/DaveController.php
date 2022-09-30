@@ -197,15 +197,16 @@ class DaveController extends BaseController {
 
         case 'json':
           header('Content-Description: File Transfer');
-          header('Content-Type: text/json');
+          header('Content-Type: application/json');
 
           $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
 
           if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
 
           $filePath = '/tmp/' . $sizeInItems . '.json';
+          $cmd = './assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath;
 
-          shell_exec('sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath);
+          shell_exec($cmd);
 
           header('Content-Length: ' . filesize($filePath));
           flush(); // Flush system output buffer
@@ -222,8 +223,9 @@ class DaveController extends BaseController {
           if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
 
           $filePath = '/tmp/' . $sizeInLines . '.txt';
+          $cmd = './assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath;
 
-          shell_exec('ruby ./assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath);
+          shell_exec($cmd);
 
           header('Content-Length: ' . filesize($filePath));
           flush(); // Flush system output buffer
