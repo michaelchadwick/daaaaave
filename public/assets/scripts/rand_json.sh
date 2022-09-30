@@ -12,7 +12,7 @@ display_usage() {
 }
 
 random_integer() {
-  gshuf -i 1-"$1" -n 1
+  shuf -i 1-"$1" -n 1
 }
 
 random_float() {
@@ -32,15 +32,15 @@ random_string () {
 }
 
 random_boolean() {
-  gshuf -i 0-1 -n 1
+  shuf -i 0-1 -n 1
 }
 
 random_word() {
-  gshuf -n 1 /usr/share/dict/words | tr -d '\n'
+  shuf -n 1 /usr/share/dict/words | tr -d '\n'
 }
 
 random_name() {
-  gshuf -n 1 /usr/share/dict/propernames | tr -d '\n'
+  shuf -n 1 /usr/share/dict/propernames | tr -d '\n'
 }
 
 if [[ ( $@ == "--help") ||  $@ == "-h" ]]
