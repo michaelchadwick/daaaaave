@@ -83,7 +83,7 @@ class DaveController extends BaseController {
       if (!$this->qsParams) {
         $this->sendOutput(
           json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I think you forgot to ask for something.',
+            'message' => 'Dave says: I think you forgot to ask for something. I know about ?dave(s), ?file, ?http_code, and ?slack. See https://github.com/michaelchadwick/daaaaave for more, man.',
             'status' => '204'
           )))
         );
