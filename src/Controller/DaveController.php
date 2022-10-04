@@ -343,7 +343,7 @@ class DaveController extends BaseController {
 
     $filePath = '/tmp/' . $sizeInItems . '.json';
 
-    $cmd = 'sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
+    $cmd = './assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
 
     shell_exec($cmd);
 
