@@ -339,21 +339,13 @@ class DaveController extends BaseController {
 
     $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
 
-    echo $sizeInItems . "\n";
-
     if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
 
     $filePath = '/tmp/' . $sizeInItems . '.json';
 
-    echo $filePath . "\n";
-
     $cmd = 'sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
 
-    echo $cmd . "\n";
-
-    var_dump(exec($cmd, $output, $retval));
-
-    echo "output: $output\n";
+    shell_exec($cmd);
 
     header('Content-Length: ' . filesize($filePath));
     flush(); // Flush system output buffer
