@@ -25,7 +25,7 @@ randon_uuid() {
 }
 
 random_string () {
-  base64 /dev/urandom | tr -d '\+\/' | dd bs="$1" count=1 2>/dev/null
+  shuf -er -n"$1"  {A..Z} {a..z} {0..9} | tr -d '\n'
 }
 
 random_boolean() {
