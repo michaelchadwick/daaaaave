@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # https://gist.github.com/eiri/3d6e47b704b6b65f55474c0ada208db2
 # prereq `brew install coreutils jo`
@@ -47,9 +47,11 @@ random_name() {
   shuf -n 1 /usr/share/dict/propernames | tr -d '\n'
 }
 
+LIMIT=${1:-$defcount}
+
 items=()
 
-for i in $(seq "${1:-$1}")
+for i in $(seq "${1:-$LIMIT}")
 do
   items+=("$(jo -- seq="$i" -s count="$(seq_formatted "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
 done
