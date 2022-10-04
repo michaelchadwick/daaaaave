@@ -4,13 +4,6 @@
 # prereq `brew install coreutils jo`
 # modified slightly by me
 
-defcount=1
-
-display_usage() {
-  echo -e "Generate NUMBER of random json objects."
-  printf "  Usage: %s [NUMBER] (DEFAULT: %s)\n\n" "$(basename "$0")" $defcount
-}
-
 seq_formatted() {
   printf "%04d" "$1"
 }
@@ -47,11 +40,11 @@ random_name() {
   shuf -n 1 /usr/share/dict/propernames | tr -d '\n'
 }
 
-LIMIT=${1:-$defcount}
-
+defcount=1
+limit=${1:-$defcount}
 items=()
 
-for i in $(seq "${1:-$LIMIT}")
+for i in $(seq "${1:-$limit}")
 do
   items+=("$(jo -- seq="$i" -s count="$(seq_formatted "$i")" integer="$(random_integer 1000)" float="$(random_float 1000)" string="$(random_string 16)" hex="$(random_hex 16)" uuid="$(randon_uuid)" bool@"$(random_boolean)" word="$(random_word)" name="$(random_name)")")
 done
