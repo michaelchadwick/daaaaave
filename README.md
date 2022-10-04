@@ -29,45 +29,53 @@ returns a simple question: "dave?"
 
 `/?daves=5`
 
-returns an array of (5) daves:
+returns an array of (5) daves as JSON:
 
 ``` json
-[
-  "dave",
-  "daave",
-  "daaave",
-  "daaaave",
-  "daaaaave"
-]
+{
+  "body": [
+    "dave",
+    "daave",
+    "daaave",
+    "daaaave",
+    "daaaaave"
+  ],
+  "customType": "server",
+  "error": true,
+  "message": "",
+  "status": "204",
+  "statusText": "OK"
+}
 ```
 
 ### Files
 
 #### Binary
 
-`/?file&type=binary&size=10`
+`/?binary&size=10`
 
 returns a 10 MB binary file called `10mb_of_dave`
 
 #### JSON
 
-`/?file&type=json`
+`/?json&size=8`
 
-returns random json data:
+returns an array of (8) random items as JSON:
 
 ``` json
 {
   "items": [
     {
-      "index": 1,
-      "index_start_at": 56,
+      "seq": 1,
+      "count": "0001",
       "integer": 40,
       "float": 12.041,
-      "name": "Elsie",
-      "surname": "Horn",
-      "fullname": "Hazel Petersen",
-      "email": "dana@o.il",
-      "bool": true
+      "string": "fc93iefsads",
+      "hex": "33ccc3a01108aa01100f2ee5cc0a0ad8",
+      "uuid": "08438494-b500-40ef-9607-68fc08f0ba8a",
+      "bool": true,
+      "word": "hourglass"
+      "name": "Elsie"
     },
     ...
   ]
@@ -76,7 +84,7 @@ returns random json data:
 
 #### Text
 
-`/?file&type=text&size=100`
+`/?text&size=100`
 
 returns 100 random names as text:
 
@@ -95,7 +103,7 @@ Marcker
 
 `/?http_code=404`
 
-returns an HTTP response with the chosen code and an appropriate message:
+returns an HTTP response as JSON with the chosen code and an appropriate message:
 
 ``` json
 {

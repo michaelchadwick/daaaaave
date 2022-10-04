@@ -91,10 +91,15 @@ class DaveController extends BaseController {
         exit;
       }
 
-      // e.g. /?slack
-      // if slack call, return data to slack
-      if (isset($this->qsParams['slack'])) {
-        $this->_processSlack();
+      // e.g. /?binary&size=1
+      if (isset($this->qsParams['binary'])) {
+        $this->_processBinary();
+      }
+
+      // e.g., /?daves=5
+      // we are returning a json array of daves
+      if (isset($this->qsParams['dave']) || isset($this->qsParams['daves'])) {
+        $this->_processDave();
       }
 
       // e.g. /?http_code&type=0|2xx|3xx|4xx|5xx
@@ -103,16 +108,20 @@ class DaveController extends BaseController {
         $this->_processHttpCode($this->qsParams['http_code']);
       }
 
-      // e.g. /?file&type=data|json|text&size=1|10|100|1000
-      // if file, check type and size, return file
-      if (isset($this->qsParams['file'])) {
-        $this->_processFile();
+      // e.g. /?json&size=5
+      if (isset($this->qsParams['json'])) {
+        $this->_processJson();
       }
 
-      // e.g., /?daves=5
-      // we are returning a json array of daves
-      if (isset($this->qsParams['dave']) || isset($this->qsParams['daves'])) {
-        $this->_processDave();
+      // e.g. /?slack
+      // if slack call, return data to slack
+      if (isset($this->qsParams['slack'])) {
+        $this->_processSlack();
+      }
+
+      // e.g. /?text&size=10
+      if (isset($this->qsParams['text'])) {
+        $this->_processText();
       }
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
@@ -122,6 +131,36 @@ class DaveController extends BaseController {
       )));
       exit;
     }
+  }
+
+  private function _processBinary() {
+    $FILE_BIN_DEF_SIZE = 0;
+    $FILE_BIN_MAX_SIZE = 50;
+
+    header('Content-Description: File Transfer');
+    header('Content-Transfer-Encoding: binary');
+
+    $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : $FILE_BIN_DEF_SIZE;
+
+    if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
+
+    $sizeInBytes = $sizeInMB * 1024 * 1024;
+    $filePath = '/tmp/' . $sizeInMB . 'mb_of_dave';
+
+    if (PHP_OS_FAMILY == 'Darwin') {
+      shell_exec('head -c ' . $sizeInBytes . ' /dev/zero > ' . $filePath);
+    } else {
+      // creates a binary file of a specific size
+      shell_exec('fallocate -l ' . $sizeInBytes . ' ' . $filePath);
+    }
+
+    header('Content-Type: application/force-download');
+    header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+    header('Content-Length: ' . filesize($filePath));
+    flush(); // Flush system output buffer
+    readfile($filePath);
+    unlink($filePath);
+    exit();
   }
 
   private function _processDave() {
@@ -156,236 +195,169 @@ class DaveController extends BaseController {
     );
   }
 
-  private function _processFile() {
-    $FILE_BIN_DEF_SIZE = 0;
-    $FILE_JSN_DEF_SIZE = 1;
-    $FILE_TXT_DEF_SIZE = 5;
-
-    $FILE_BIN_MAX_SIZE = 50;
-    $FILE_JSN_MAX_SIZE = 100;
-    $FILE_TXT_MAX_SIZE = 50;
-
-    if (isset($this->qsParams['type'])) {
-      $fileType = $this->qsParams['type'];
-
-      switch ($fileType) {
-        case 'binary':
-          header('Content-Description: File Transfer');
-          header('Content-Transfer-Encoding: binary');
-
-          $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : $FILE_BIN_DEF_SIZE;
-
-          if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
-
-          $sizeInBytes = $sizeInMB * 1024 * 1024;
-          $filePath = '/tmp/' . $sizeInMB . 'mb_of_dave';
-
-          if (PHP_OS_FAMILY == 'Darwin') {
-            shell_exec('head -c ' . $sizeInBytes . ' /dev/zero > ' . $filePath);
-          } else {
-            // creates a binary file of a specific size
-            shell_exec('fallocate -l ' . $sizeInBytes . ' ' . $filePath);
-          }
-
-          header('Content-Type: application/force-download');
-          header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-          header('Content-Length: ' . filesize($filePath));
-          flush(); // Flush system output buffer
-          readfile($filePath);
-          unlink($filePath);
-          exit();
-
-        case 'json':
-          header('Content-Description: File Transfer');
-          header('Content-Type: application/json');
-
-          $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
-
-          if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
-
-          $filePath = '/tmp/' . $sizeInItems . '.json';
-          $cmd = './assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath;
-
-          shell_exec($cmd);
-
-          header('Content-Length: ' . filesize($filePath));
-          flush(); // Flush system output buffer
-          echo file_get_contents($filePath);
-          unlink($filePath);
-          exit();
-
-        case 'text':
-          header('Content-Description: File Transfer');
-          header('Content-Type: text/plain');
-
-          $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_TXT_DEF_SIZE;
-
-          if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
-
-          $filePath = '/tmp/' . $sizeInLines . '.txt';
-          $cmd = './assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath;
-
-          shell_exec($cmd);
-
-          header('Content-Length: ' . filesize($filePath));
-          flush(); // Flush system output buffer
-          echo file_get_contents($filePath);
-          unlink($filePath);
-          exit();
-
-        default:
-          header('HTTP/1.1 400 Bad Request');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'You did not specify a valid file type! ' . $_SERVER['HTTP_HOST'] . '/?file&type=[binary|json|text]',
-              'status' => 400
-            )))
-          );
-      }
-    } else {
-      header('HTTP/1.1 400 Bad Request');
-      $this->sendOutput(
-        json_encode(new CustomResponse(array(
-          'message' => 'You did not specify a file type! ' . $_SERVER['HTTP_HOST'] . '/?file&type=[binary|json|text]',
-          'status' => 400
-        )))
-      );
+  private function _processHttpCode($code) {
+    switch ($code) {
+      case 0:
+        header('HTTP/1.1 500');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I am nothing.',
+            'status' => 500,
+          )))
+        );
+      case 200:
+        header('HTTP/1.1 200');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'error' => false,
+            'message' => 'Dave says: Woo!'
+          )))
+        );
+      case 204:
+        header('HTTP/1.1 204');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'error' => false,
+            'message' => 'Dave says: ...',
+            'status' => 204
+          )))
+        );
+      case 301:
+        header('HTTP/1.1 301');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'error' => false,
+            'message' => 'Dave says: I moved, man.',
+            'status' => 301
+          )))
+        );
+      case 302:
+        header('HTTP/1.1 302');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'error' => false,
+            'message' => 'Dave says: I took a trip, man.',
+            'status' => 302
+          )))
+        );
+      case 400:
+        header('HTTP/1.1 400');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: Bad to the bone, dude.',
+            'status' => 400
+          )))
+        );
+      case 401:
+        header('HTTP/1.1 401');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I can\'t do it, man. I lost my keys.',
+            'status' => 400
+          )))
+        );
+      case 403:
+        header('HTTP/1.1 403');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: No way in.',
+            'status' => 403
+          )))
+        );
+      case 404:
+        header('HTTP/1.1 404');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I\'m not here, man.',
+            'status' => 404
+          )))
+        );
+      case 405:
+        header('HTTP/1.1 405');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I can\'t allow that here, guy.',
+            'status' => 405
+          )))
+        );
+      case 410:
+        header('HTTP/1.1 410');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I\' seriously not here, dude.',
+            'status' => 410
+          )))
+        );
+      case 418:
+        header('HTTP/1.1 418');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I only do coffee.',
+            'status' => 418
+          )))
+        );
+      case 444:
+        header('HTTP/1.1 444');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'status' => 444
+          )))
+        );
+      case 500:
+        header('HTTP/1.1 500');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I can\'t process that one, buddy.',
+            'status' => 500
+          )))
+        );
+      case 502:
+        header('HTTP/1.1 502');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I tried asking around, but got gibberish.',
+            'status' => 502
+          )))
+        );
+      default:
+        header('HTTP/1.1 400 Bad Request');
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'message' => 'Dave says: I don\'t know, uh, know that code.',
+            'status' => 400
+          )))
+        );
     }
   }
 
-  private function _processHttpCode($code) {
-      switch ($code) {
-        case 0:
-          header('HTTP/1.1 500');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I am nothing.',
-              'status' => 500,
-            )))
-          );
-        case 200:
-          header('HTTP/1.1 200');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'error' => false,
-              'message' => 'Dave says: Woo!'
-            )))
-          );
-        case 204:
-          header('HTTP/1.1 204');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'error' => false,
-              'message' => 'Dave says: ...',
-              'status' => 204
-            )))
-          );
-        case 301:
-          header('HTTP/1.1 301');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'error' => false,
-              'message' => 'Dave says: I moved, man.',
-              'status' => 301
-            )))
-          );
-        case 302:
-          header('HTTP/1.1 302');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'error' => false,
-              'message' => 'Dave says: I took a trip, man.',
-              'status' => 302
-            )))
-          );
-        case 400:
-          header('HTTP/1.1 400');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: Bad to the bone, dude.',
-              'status' => 400
-            )))
-          );
-        case 401:
-          header('HTTP/1.1 401');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I can\'t do it, man. I lost my keys.',
-              'status' => 400
-            )))
-          );
-        case 403:
-          header('HTTP/1.1 403');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: No way in.',
-              'status' => 403
-            )))
-          );
-        case 404:
-          header('HTTP/1.1 404');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I\'m not here, man.',
-              'status' => 404
-            )))
-          );
-        case 405:
-          header('HTTP/1.1 405');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I can\'t allow that here, guy.',
-              'status' => 405
-            )))
-          );
-        case 410:
-          header('HTTP/1.1 410');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I\' seriously not here, dude.',
-              'status' => 410
-            )))
-          );
-        case 418:
-          header('HTTP/1.1 418');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I only do coffee.',
-              'status' => 418
-            )))
-          );
-        case 444:
-          header('HTTP/1.1 444');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'status' => 444
-            )))
-          );
-        case 500:
-          header('HTTP/1.1 500');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I can\'t process that one, buddy.',
-              'status' => 500
-            )))
-          );
-        case 502:
-          header('HTTP/1.1 502');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I tried asking around, but got gibberish.',
-              'status' => 502
-            )))
-          );
-        default:
-          header('HTTP/1.1 400 Bad Request');
-          $this->sendOutput(
-            json_encode(new CustomResponse(array(
-              'message' => 'Dave says: I don\'t know, uh, know that code.',
-              'status' => 400
-            )))
-          );
-      }
+  private function _processJson() {
+    $FILE_JSN_DEF_SIZE = 1;
+    $FILE_JSN_MAX_SIZE = 100;
+
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/json');
+
+    $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
+
+    echo $sizeInItems . "\n";
+
+    if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
+
+    $filePath = '/tmp/' . $sizeInItems . '.json';
+
+    echo $filePath . "\n";
+
+    $cmd = 'sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
+
+    echo $cmd . "\n"; die();
+
+    shell_exec($cmd);
+
+    header('Content-Length: ' . filesize($filePath));
+    flush(); // Flush system output buffer
+    echo file_get_contents($filePath);
+    unlink($filePath);
+    exit();
   }
 
   private function _processSlack() {
@@ -440,4 +412,26 @@ class DaveController extends BaseController {
     }
   }
 
+  private function _processText() {
+    $FILE_TXT_DEF_SIZE = 5;
+    $FILE_TXT_MAX_SIZE = 50;
+
+    header('Content-Description: File Transfer');
+    header('Content-Type: text/plain');
+
+    $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_TXT_DEF_SIZE;
+
+    if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
+
+    $filePath = '/tmp/' . $sizeInLines . '.txt';
+    $cmd = './assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath;
+
+    shell_exec($cmd);
+
+    header('Content-Length: ' . filesize($filePath));
+    flush(); // Flush system output buffer
+    echo file_get_contents($filePath);
+    unlink($filePath);
+    exit();
+  }
 }
