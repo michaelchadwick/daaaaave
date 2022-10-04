@@ -83,7 +83,7 @@ class DaveController extends BaseController {
       if (!$this->qsParams) {
         $this->sendOutput(
           json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I think you forgot to ask for something. I know about ?dave(s), ?file, ?http_code, and ?slack. See https://github.com/michaelchadwick/daaaaave for more, man.',
+            'message' => 'Dave says: I think you forgot to ask for something. I know about ?binary, ?dave(s), ?http_code, ?json, ?slack, and ?text. See https://github.com/michaelchadwick/daaaaave for more, man.',
             'status' => '204'
           )))
         );
@@ -349,9 +349,11 @@ class DaveController extends BaseController {
 
     $cmd = 'sh ./assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
 
-    echo $cmd . "\n"; die();
+    echo $cmd . "\n";
 
-    shell_exec($cmd);
+    var_dump(exec($cmd, $output, $retval));
+
+    echo "output: $output\n";
 
     header('Content-Length: ' . filesize($filePath));
     flush(); // Flush system output buffer
