@@ -339,7 +339,9 @@ class DaveController extends BaseController {
 
     $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
 
-    if ($sizeInItems > $FILE_JSN_MAX_SIZE) $sizeInItems = $FILE_JSN_MAX_SIZE;
+    if ($sizeInItems > $FILE_JSN_MAX_SIZE && !$_GET['bypass']) {
+      $sizeInItems = $FILE_JSN_MAX_SIZE;
+    }
 
     $filePath = '/tmp/' . $sizeInItems . '.json';
 
