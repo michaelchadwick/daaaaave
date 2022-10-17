@@ -333,13 +333,14 @@ class DaveController extends BaseController {
   private function _processJson() {
     $FILE_JSN_DEF_SIZE = 1;
     $FILE_JSN_MAX_SIZE = 100;
+    $bypass = isset($_GET['bypass']);
 
     header('Content-Description: File Transfer');
     header('Content-Type: application/json');
 
     $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
 
-    if ($sizeInItems > $FILE_JSN_MAX_SIZE && !$_GET['bypass']) {
+    if ($sizeInItems > $FILE_JSN_MAX_SIZE && !$bypass) {
       $sizeInItems = $FILE_JSN_MAX_SIZE;
     }
 
