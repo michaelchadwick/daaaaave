@@ -8,53 +8,6 @@ use Dotenv\Dotenv;
 include PROJECT_ROOT_PATH . 'inc/config.php';
 
 class DaveController extends BaseController {
-  private $songs = array(
-    'Docking',
-    'Road Trip',
-    'Charlotte Said',
-    'Wondering Why',
-    'The Ladder',
-    'Fudge and Jam',
-    'Tattoo Fetish',
-    'Pinto',
-    'Scenes From My Window',
-    'Overjoyed',
-    'Beyond Today',
-    'Even Tide',
-    'Presto Change-o',
-    'SoCal Switchblade',
-    'Unwound String',
-    'Slow Boat',
-    'Down and Out',
-    'Humanity',
-    'Down and Out',
-    'Anodyne Blues',
-    'Gains Gotten Ill',
-    'Zepslider'
-  );
-  private $responses = array(
-    '[song_macro]',
-    'Uh, that\'s *David* to you. Heh. Just kidding! Dave is fine.',
-    'Dave\'s not here right now.',
-    'You called?',
-    'Yeah, Dave is with you, man.',
-    'Damn right Dave is down.',
-    '*You got it!*',
-    '*Hell yes!*',
-    '*Woo!*',
-    'Dave is caught in an interdimensional rock warp, but will be back soon.',
-    'Alive and all that jive.',
-    'Just reeling from how badass ya\'ll are.',
-    'Dave has got your back.',
-    'I\'m on my way.',
-    'Keep *rockin\'*, and Dave will be there.',
-    'Just call me _Daaaaaaave_.',
-    'I\'m feeling just the right amount of *Dave* today, buddy.',
-    'You rang?',
-    'I\'m still here.',
-    'What\'s shakin\', bacon?',
-    'Go for Dave.'
-  );
   private $qsParams;
 
   public function __construct () {
@@ -369,18 +322,67 @@ class DaveController extends BaseController {
         // token matches
         if ($tokenExt == $tokenInt) {
           $choice = rand(0, count($this->response) - 1);
+
+          $flvSongs = array(
+            'Docking',
+            'Road Trip',
+            'Charlotte Said',
+            'Wondering Why',
+            'The Ladder',
+            'Fudge and Jam',
+            'Tattoo Fetish',
+            'Pinto',
+            'Scenes From My Window',
+            'Overjoyed',
+            'Beyond Today',
+            'Even Tide',
+            'Presto Change-o',
+            'SoCal Switchblade',
+            'Unwound String',
+            'Slow Boat',
+            'Down and Out',
+            'Humanity',
+            'Down and Out',
+            'Anodyne Blues',
+            'Gains Gotten Ill',
+            'Zepslider'
+          );
+          $flvReplies = array(
+            '[song_macro]',
+            'Uh, that\'s *David* to you. Heh. Just kidding! Dave is fine.',
+            'Dave\'s not here right now.',
+            'You called?',
+            'Yeah, Dave is with you, man.',
+            'Damn right Dave is down.',
+            '*You got it!*',
+            '*Hell yes!*',
+            '*Woo!*',
+            'Dave is caught in an interdimensional rock warp, but will be back soon.',
+            'Alive and all that jive.',
+            'Just reeling from how badass ya\'ll are.',
+            'Dave has got your back.',
+            'I\'m on my way.',
+            'Keep *rockin\'*, and Dave will be there.',
+            'Just call me _Daaaaaaave_.',
+            'I\'m feeling just the right amount of *Dave* today, buddy.',
+            'You rang?',
+            'I\'m still here.',
+            'What\'s shakin\', bacon?',
+            'Go for Dave.'
+          );
+
           if ($choice == 0) {
             $this->sendOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
-                'text' => 'Hey, just listening to _' . $this->songs[rand(0, count($this->songs) - 1)] . '_ right now. It *rules*!'
+                'text' => 'Hey, just listening to _' . $flvSongs[rand(0, count($flvSongs) - 1)] . '_ right now. It *rules*!'
               ))
             );
           } else {
             $this->sendOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
-                'text' => $this->responses[rand(0, count($this->responses) - 1)]
+                'text' => $flvReplies[rand(0, count($flvReplies) - 1)]
               ))
             );
           }
