@@ -122,6 +122,7 @@ class DaveController extends BaseController {
 
     $daveArray = [];
     $daveCount = $DAVE_DEF_SIZE;
+    $bypass = isset($_GET['bypass']);
 
     // grab potential filter and adjust amount of daves
     if (isset($this->qsParams['dave'])) {
@@ -131,7 +132,10 @@ class DaveController extends BaseController {
       $daveCount = $this->qsParams['daves'];
 
       if ($daveCount <= 0) $daveCount = $DAVE_DEF_SIZE;
-      if ($daveCount > $DAVE_MAX_SIZE) $daveCount = $DAVE_MAX_SIZE;
+
+      if ($daveCount > $DAVE_MAX_SIZE && !$bypass) {
+        $daveCount = $DAVE_MAX_SIZE;
+      }
     }
 
     // build dave array
