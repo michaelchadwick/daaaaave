@@ -66,6 +66,11 @@ class DaveController extends BaseController {
         $this->_processJson();
       }
 
+      // e.g. /?sites
+      if (isset($this->qsParams['sites'])) {
+        $this->_processSites();
+      }
+
       // e.g. /?slack
       // if slack call, return data to slack
       if (isset($this->qsParams['slack'])) {
@@ -312,6 +317,24 @@ class DaveController extends BaseController {
     echo file_get_contents($filePath);
     unlink($filePath);
     exit();
+  }
+
+  private function _processSites() {
+    $sites = array(
+      'Audio Hash' => 'https://ah.neb.host',
+      'Bogdle' => 'https://bogdle.fun',
+      'Gem Warrior' => 'https://gw.neb.host',
+      'NebyooKeys' => 'https://piano.neb.host',
+      'Raffler' => 'https://raffler.neb.host',
+      'Sketchage' => 'https://sketchage.neb.host'
+    );
+
+    $this->sendOutput(
+      json_encode(new CustomResponse(array(
+        'body' => $sites,
+        'error' => false
+      )))
+    );
   }
 
   private function _processSlack() {
