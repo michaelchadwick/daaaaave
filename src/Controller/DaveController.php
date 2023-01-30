@@ -344,6 +344,10 @@ class DaveController extends BaseController {
       [
         'title' => 'Sketchage',
         'url' => 'https://sketchage.neb.host'
+      ],
+      [
+        'title' => 'SoundLister',
+        'url' => 'https://soundlister.neb.host'
       ]
     );
 
