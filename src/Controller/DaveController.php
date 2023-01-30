@@ -321,12 +321,30 @@ class DaveController extends BaseController {
 
   private function _processSites() {
     $sites = array(
-      'Audio Hash' => 'https://ah.neb.host',
-      'Bogdle' => 'https://bogdle.fun',
-      'Gem Warrior' => 'https://gw.neb.host',
-      'NebyooKeys' => 'https://piano.neb.host',
-      'Raffler' => 'https://raffler.neb.host',
-      'Sketchage' => 'https://sketchage.neb.host'
+      [
+        'title' => 'Audio Hash',
+        'url' => 'https://ah.neb.host'
+      ],
+      [
+        'title' => 'Bogdle',
+        'url' => 'https://bogdle.fun'
+      ],
+      [
+        'title' => 'Gem Warrior',
+        'url' => 'https://gw.neb.host'
+      ],
+      [
+        'title' => 'NebyooKeys',
+        'url' => 'https://piano.neb.host'
+      ],
+      [
+        'title' => 'Raffler',
+        'url' => 'https://raffler.neb.host'
+      ],
+      [
+        'title' => 'Sketchage',
+        'url' => 'https://sketchage.neb.host'
+      ]
     );
 
     $this->sendOutput(
