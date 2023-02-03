@@ -334,8 +334,8 @@ class DaveController extends BaseController {
         'url' => 'https://gw.neb.host'
       ],
       [
-        'title' => 'NebyooKeys',
-        'url' => 'https://piano.neb.host'
+        'title' => 'Keebord',
+        'url' => 'https://keebord.neb.host'
       ],
       [
         'title' => 'Raffler',
