@@ -327,7 +327,7 @@ class DaveController extends BaseController {
       ],
       [
         'title' => 'Bogdle',
-        'url' => 'https://bogdle.fun'
+        'url' => 'https://bogdle.neb.host'
       ],
       [
         'title' => 'Gem Warrior',
