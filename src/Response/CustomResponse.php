@@ -7,8 +7,7 @@ class CustomResponse {
   var $status;
   var $statusText;
 
-  public function __construct($values = null)
-  {
+  public function __construct($values = null) {
     if ($values) {
       $this->setBody(isset($values['body']) ? $values['body'] : null);
       $this->setCustomType(isset($values['customType']) ? $values['customType'] : 'server');
@@ -21,51 +20,45 @@ class CustomResponse {
     return $this;
   }
 
-  public function getBody(){
+  public function getBody() {
     return $this->body;
   }
-
-  public function setBody($body){
+  public function setBody($body) {
     $this->body = $body;
   }
 
-  public function getCustomType(){
+  public function getCustomType() {
     return $this->customType;
   }
-
-  public function setCustomType($customType){
+  public function setCustomType($customType) {
     $this->customType = $customType;
   }
 
-  public function getError(){
+  public function getError() {
     return $this->error;
   }
-
-  public function setError($error){
+  public function setError($error) {
     $this->error = $error;
   }
 
-  public function getMessage(){
+  public function getMessage() {
     return $this->message;
   }
-
-  public function setMessage($message){
+  public function setMessage($message) {
     $this->message = $message;
   }
 
-  public function getStatus(){
+  public function getStatus() {
     return $this->status;
   }
-
-  public function setStatus($status){
+  public function setStatus($status) {
     $this->status = $status;
   }
 
-  public function getStatusText(){
+  public function getStatusText() {
     return $this->statusText;
   }
-
-  public function setStatusText($statusText){
+  public function setStatusText($statusText) {
     $this->statusText = $statusText;
   }
 }
