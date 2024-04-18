@@ -246,7 +246,7 @@ class DaveController extends BaseController {
         header('HTTP/1.1 410');
         $this->sendOutput(
           json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I\' seriously not here, dude.',
+            'message' => 'Dave says: I\'m seriously not here, dude.',
             'status' => 410
           )))
         );
