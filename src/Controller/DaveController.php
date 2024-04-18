@@ -5,6 +5,9 @@ namespace Src\Controller;
 use CustomResponse;
 use Dotenv\Dotenv;
 
+use Dave\Models\Sites;
+use Dave\Models\Text;
+
 include PROJECT_ROOT_PATH . 'inc/config.php';
 
 class DaveController extends BaseController {
@@ -68,7 +71,12 @@ class DaveController extends BaseController {
 
       // e.g. /?sites
       if (isset($this->qsParams['sites'])) {
-        $this->_processSites();
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'body' => new Sites(),
+            'error' => false
+          )))
+        );
       }
 
       // e.g. /?slack
@@ -79,7 +87,7 @@ class DaveController extends BaseController {
 
       // e.g. /?text&size=10
       if (isset($this->qsParams['text'])) {
-        $this->_processText();
+        return new Text($_GET['size']);
       }
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
@@ -320,43 +328,7 @@ class DaveController extends BaseController {
   }
 
   private function _processSites() {
-    $sites = array(
-      [
-        'title' => 'Audio Hash',
-        'url' => 'https://ah.neb.host'
-      ],
-      [
-        'title' => 'Bogdle',
-        'url' => 'https://bogdle.neb.host'
-      ],
-      [
-        'title' => 'Gem Warrior',
-        'url' => 'https://gw.neb.host'
-      ],
-      [
-        'title' => 'Keebord',
-        'url' => 'https://keebord.neb.host'
-      ],
-      [
-        'title' => 'Raffler',
-        'url' => 'https://raffler.neb.host'
-      ],
-      [
-        'title' => 'Sketchage',
-        'url' => 'https://sketchage.neb.host'
-      ],
-      [
-        'title' => 'SoundLister',
-        'url' => 'https://soundlister.neb.host'
-      ]
-    );
-
-    $this->sendOutput(
-      json_encode(new CustomResponse(array(
-        'body' => $sites,
-        'error' => false
-      )))
-    );
+    
   }
 
   private function _processSlack() {

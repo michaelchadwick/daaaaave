@@ -8,6 +8,10 @@ require_once PROJECT_ROOT_PATH . 'inc/config.php';
 // include base controller file
 require_once PROJECT_ROOT_PATH . 'src/Controller/BaseController.php';
 
+// include our custom model classes
+require_once PROJECT_ROOT_PATH . 'src/Models/Sites.php';
+require_once PROJECT_ROOT_PATH . 'src/Models/Text.php';
+
 // include our custom response class
 require_once PROJECT_ROOT_PATH . 'src/Response/CustomResponse.php';
 
