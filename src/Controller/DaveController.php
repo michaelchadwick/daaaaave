@@ -55,10 +55,10 @@ class DaveController extends BaseController {
         $this->_processDave();
       }
 
-      // e.g. /?http_code&type=0|2xx|3xx|4xx|5xx
+      // e.g. /?http_code=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
       if (isset($this->qsParams['http_code'])) {
-        $this->_processHttpCode($this->qsParams['http_code']);
+        $this->_processHttp($this->qsParams['http_code']);
       }
 
       // e.g. /?json&size=5
@@ -84,7 +84,7 @@ class DaveController extends BaseController {
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
       echo json_encode(new CustomResponse(array(
-        'message' => 'Dave says: Current OPTIONS available - ?daves, ?file, ?http_code, ?slack',
+        'message' => 'Dave says: Current OPTIONS available - ?daves, ?file, ?http_code, ?slack, ?text',
         'status' => 200
       )));
       exit;
@@ -157,7 +157,7 @@ class DaveController extends BaseController {
     );
   }
 
-  private function _processHttpCode($code) {
+  private function _processHttp($code) {
     switch ($code) {
       case 0:
         header('HTTP/1.1 500');
