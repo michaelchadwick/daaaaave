@@ -144,10 +144,6 @@ class DaveController extends BaseController {
     }
   }
 
-  private function _processHttp($code) {
-    
-  }
-
   private function _processSlack() {
     // did we get a Slack token?
     if (isset($this->qsParams['token'])) {
