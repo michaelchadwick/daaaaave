@@ -5,6 +5,7 @@ namespace Src\Controller;
 use CustomResponse;
 use Dotenv\Dotenv;
 
+use Dave\Models\Dave;
 use Dave\Models\Json;
 use Dave\Models\Sites;
 use Dave\Models\Text;
@@ -53,10 +54,38 @@ class DaveController extends BaseController {
         $this->_processBinary();
       }
 
-      // e.g., /?daves=5
+      // e.g. /?dave
+      // we are returning a json array of one dave
+      if (isset($this->qsParams['dave'])) {
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'body' => new Dave(
+              $this->qsParams['dave'],
+              'single', 
+              isset($_GET['bypass'])
+            ),
+            'error' => false
+          )))
+        );
+
+        exit;
+      }
+      
+      // e.g. /?daves=5
       // we are returning a json array of daves
-      if (isset($this->qsParams['dave']) || isset($this->qsParams['daves'])) {
-        $this->_processDave();
+      if (isset($this->qsParams['daves'])) {
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'body' => new Dave(
+              $this->qsParams['daves'], 
+              'multiple', 
+              isset($_GET['bypass'])
+            ),
+            'error' => false
+          )))
+        );
+
+        exit;
       }
 
       // e.g. /?http_code=0|2xx|3xx|4xx|5xx
@@ -78,6 +107,8 @@ class DaveController extends BaseController {
             'error' => false
           )))
         );
+
+        exit;
       }
 
       // e.g. /?slack
@@ -93,7 +124,7 @@ class DaveController extends BaseController {
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
       echo json_encode(new CustomResponse(array(
-        'message' => 'Dave says: Current OPTIONS available - ?daves, ?file, ?http_code, ?slack, ?text',
+        'message' => 'Dave says: Current OPTIONS available - ?binary, ?dave(s), ?http_code, ?slack, ?text',
         'status' => 200
       )));
       exit;
@@ -128,42 +159,6 @@ class DaveController extends BaseController {
     readfile($filePath);
     unlink($filePath);
     exit();
-  }
-
-  private function _processDave() {
-    $DAVE_DEF_SIZE = 1;
-    $DAVE_MAX_SIZE = 1000;
-
-    $daveArray = [];
-    $daveCount = $DAVE_DEF_SIZE;
-    $bypass = isset($_GET['bypass']);
-
-    // grab potential filter and adjust amount of daves
-    if (isset($this->qsParams['dave'])) {
-      echo "dave? " . $this->qsParams['dave']; exit;
-    }
-    if (isset($this->qsParams['daves'])) {
-      $daveCount = $this->qsParams['daves'];
-
-      if ($daveCount <= 0) $daveCount = $DAVE_DEF_SIZE;
-
-      if ($daveCount > $DAVE_MAX_SIZE && !$bypass) {
-        $daveCount = $DAVE_MAX_SIZE;
-      }
-    }
-
-    // build dave array
-    for($i = 0; $i < $daveCount; $i++) {
-      $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
-    }
-
-    // return JSON of daves
-    $this->sendOutput(
-      json_encode(new CustomResponse(array(
-        'body' => $daveArray,
-        'error' => false
-      )))
-    );
   }
 
   private function _processHttp($code) {
@@ -299,10 +294,6 @@ class DaveController extends BaseController {
           )))
         );
     }
-  }
-
-  private function _processJson() {
-    
   }
 
   private function _processSlack() {
