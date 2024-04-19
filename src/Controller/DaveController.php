@@ -16,10 +16,11 @@ include PROJECT_ROOT_PATH . 'inc/config.php';
 
 class DaveController extends BaseController {
   private $qsParams;
+  private $dotenv;
 
   public function __construct () {
-    $dotenv = Dotenv::createImmutable(PROJECT_ROOT_PATH);
-    $dotenv->load();
+    $this->dotenv = Dotenv::createImmutable(PROJECT_ROOT_PATH);
+    $this->dotenv->load();
 
     $this->qsParams = $this->getQueryStringParams();
   }
@@ -150,14 +151,18 @@ class DaveController extends BaseController {
       $tokenExt = $this->qsParams['token'];
 
       $this->dotenv->required('DAVE_SLACK_TOKEN');
-      $tokenInt = getenv('DAVE_SLACK_TOKEN');
+      $tokenInt = $_ENV['DAVE_SLACK_TOKEN'];
 
       if (isset($tokenExt) && !empty($tokenInt)) {
         // token matches
         if ($tokenExt == $tokenInt) {
-          $choice = rand(0, count($this->response) - 1);
+          $choice = rand(0, 1);
 
-          $flvSongs = array(
+          if (!isset($this->qsParams['flv'])) {
+            $choice = 1;
+          }
+
+          $songs = array(
             'Docking',
             'Road Trip',
             'Charlotte Said',
@@ -181,13 +186,13 @@ class DaveController extends BaseController {
             'Gains Gotten Ill',
             'Zepslider'
           );
-          $flvReplies = array(
-            '[song_macro]',
+          $replies = array(
+            // '[song_macro]',
             'Uh, that\'s *David* to you. Heh. Just kidding! Dave is fine.',
             'Dave\'s not here right now.',
             'You called?',
             'Yeah, Dave is with you, man.',
-            'Damn right Dave is down.',
+            'Darn tootin\' Dave is down.',
             '*You got it!*',
             '*Hell yes!*',
             '*Woo!*',
@@ -209,14 +214,14 @@ class DaveController extends BaseController {
             $this->sendOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
-                'text' => 'Hey, just listening to _' . $flvSongs[rand(0, count($flvSongs) - 1)] . '_ right now. It *rules*!'
+                'text' => 'Hey, just listening to _' . $songs[rand(0, count($songs) - 1)] . '_ right now. It *rules*!'
               ))
             );
           } else {
             $this->sendOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
-                'text' => $flvReplies[rand(0, count($flvReplies) - 1)]
+                'text' => $replies[rand(0, count($replies) - 1)]
               ))
             );
           }
@@ -239,7 +244,7 @@ class DaveController extends BaseController {
     } else { // missing external token
       $this->sendOutput(
         json_encode(array(
-          'text' => 'Dave says: \'Eh? I don\'t think I know you, buddy.\''
+          'text' => 'Dave says: \'Eh? Who\'s there?\''
         ))
       );
     }
