@@ -5,6 +5,7 @@ namespace Src\Controller;
 use CustomResponse;
 use Dotenv\Dotenv;
 
+use Dave\Models\Binary;
 use Dave\Models\Dave;
 use Dave\Models\Json;
 use Dave\Models\Sites;
@@ -51,7 +52,7 @@ class DaveController extends BaseController {
 
       // e.g. /?binary&size=1
       if (isset($this->qsParams['binary'])) {
-        $this->_processBinary();
+        return new Binary($_GET['size']);
       }
 
       // e.g. /?dave
@@ -129,36 +130,6 @@ class DaveController extends BaseController {
       )));
       exit;
     }
-  }
-
-  private function _processBinary() {
-    $FILE_BIN_DEF_SIZE = 0;
-    $FILE_BIN_MAX_SIZE = 50;
-
-    header('Content-Description: File Transfer');
-    header('Content-Transfer-Encoding: binary');
-
-    $sizeInMB = (isset($_GET['size']) && $_GET['size'] >= 0) ? floor($_GET['size']) : $FILE_BIN_DEF_SIZE;
-
-    if ($sizeInMB > $FILE_BIN_MAX_SIZE) $sizeInMB = $FILE_BIN_MAX_SIZE; // max request 100 MB for now
-
-    $sizeInBytes = $sizeInMB * 1024 * 1024;
-    $filePath = '/tmp/' . $sizeInMB . 'mb_of_dave';
-
-    if (PHP_OS_FAMILY == 'Darwin') {
-      shell_exec('head -c ' . $sizeInBytes . ' /dev/zero > ' . $filePath);
-    } else {
-      // creates a binary file of a specific size
-      shell_exec('fallocate -l ' . $sizeInBytes . ' ' . $filePath);
-    }
-
-    header('Content-Type: application/force-download');
-    header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-    header('Content-Length: ' . filesize($filePath));
-    flush(); // Flush system output buffer
-    readfile($filePath);
-    unlink($filePath);
-    exit();
   }
 
   private function _processHttp($code) {
