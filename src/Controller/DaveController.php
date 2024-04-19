@@ -7,6 +7,7 @@ use Dotenv\Dotenv;
 
 use Dave\Models\Binary;
 use Dave\Models\Dave;
+use Dave\Models\Http;
 use Dave\Models\Json;
 use Dave\Models\Sites;
 use Dave\Models\Text;
@@ -93,6 +94,17 @@ class DaveController extends BaseController {
       // if http code, return pre-scripted JSON object
       if (isset($this->qsParams['http_code'])) {
         $this->_processHttp($this->qsParams['http_code']);
+
+        $resp = new Http($this->qsParams['http_code']);
+
+        header('HTTP/1.1 ' . $resp->status . ($resp->error ? ' Bad Request' : ''));
+        $this->sendOutput(
+          json_encode(new CustomResponse(array(
+            'error' => $resp->error,
+            'message' => $resp->message,
+            'status' => intval($resp->status),
+          )))
+        );
       }
 
       // e.g. /?json&size=5
@@ -133,138 +145,7 @@ class DaveController extends BaseController {
   }
 
   private function _processHttp($code) {
-    switch ($code) {
-      case 0:
-        header('HTTP/1.1 500');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I am nothing.',
-            'status' => 500,
-          )))
-        );
-      case 200:
-        header('HTTP/1.1 200');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'error' => false,
-            'message' => 'Dave says: Woo!'
-          )))
-        );
-      case 204:
-        header('HTTP/1.1 204');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'error' => false,
-            'message' => 'Dave says: ...',
-            'status' => 204
-          )))
-        );
-      case 301:
-        header('HTTP/1.1 301');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'error' => false,
-            'message' => 'Dave says: I moved, man.',
-            'status' => 301
-          )))
-        );
-      case 302:
-        header('HTTP/1.1 302');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'error' => false,
-            'message' => 'Dave says: I took a trip, man.',
-            'status' => 302
-          )))
-        );
-      case 400:
-        header('HTTP/1.1 400');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: Bad to the bone, dude.',
-            'status' => 400
-          )))
-        );
-      case 401:
-        header('HTTP/1.1 401');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I can\'t do it, man. I lost my keys.',
-            'status' => 400
-          )))
-        );
-      case 403:
-        header('HTTP/1.1 403');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: No way in.',
-            'status' => 403
-          )))
-        );
-      case 404:
-        header('HTTP/1.1 404');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I\'m not here, man.',
-            'status' => 404
-          )))
-        );
-      case 405:
-        header('HTTP/1.1 405');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I can\'t allow that here, guy.',
-            'status' => 405
-          )))
-        );
-      case 410:
-        header('HTTP/1.1 410');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I\'m seriously not here, dude.',
-            'status' => 410
-          )))
-        );
-      case 418:
-        header('HTTP/1.1 418');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I only do coffee.',
-            'status' => 418
-          )))
-        );
-      case 444:
-        header('HTTP/1.1 444');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'status' => 444
-          )))
-        );
-      case 500:
-        header('HTTP/1.1 500');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I can\'t process that one, buddy.',
-            'status' => 500
-          )))
-        );
-      case 502:
-        header('HTTP/1.1 502');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I tried asking around, but got gibberish.',
-            'status' => 502
-          )))
-        );
-      default:
-        header('HTTP/1.1 400 Bad Request');
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I don\'t know, uh, know that code.',
-            'status' => 400
-          )))
-        );
-    }
+    
   }
 
   private function _processSlack() {
