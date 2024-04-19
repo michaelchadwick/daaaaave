@@ -5,6 +5,7 @@ namespace Src\Controller;
 use CustomResponse;
 use Dotenv\Dotenv;
 
+use Dave\Models\Json;
 use Dave\Models\Sites;
 use Dave\Models\Text;
 
@@ -66,7 +67,7 @@ class DaveController extends BaseController {
 
       // e.g. /?json&size=5
       if (isset($this->qsParams['json'])) {
-        $this->_processJson();
+        return new Json($_GET['size']);
       }
 
       // e.g. /?sites
@@ -301,33 +302,6 @@ class DaveController extends BaseController {
   }
 
   private function _processJson() {
-    $FILE_JSN_DEF_SIZE = 1;
-    $FILE_JSN_MAX_SIZE = 100;
-    $bypass = isset($_GET['bypass']);
-
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/json');
-
-    $sizeInItems = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_JSN_DEF_SIZE;
-
-    if ($sizeInItems > $FILE_JSN_MAX_SIZE && !$bypass) {
-      $sizeInItems = $FILE_JSN_MAX_SIZE;
-    }
-
-    $filePath = '/tmp/' . $sizeInItems . '.json';
-
-    $cmd = './assets/scripts/rand_json.sh ' . $sizeInItems . ' > ' . $filePath . ' 2>&1';
-
-    shell_exec($cmd);
-
-    header('Content-Length: ' . filesize($filePath));
-    flush(); // Flush system output buffer
-    echo file_get_contents($filePath);
-    unlink($filePath);
-    exit();
-  }
-
-  private function _processSites() {
     
   }
 
@@ -430,28 +404,5 @@ class DaveController extends BaseController {
         ))
       );
     }
-  }
-
-  private function _processText() {
-    $FILE_TXT_DEF_SIZE = 5;
-    $FILE_TXT_MAX_SIZE = 50;
-
-    header('Content-Description: File Transfer');
-    header('Content-Type: text/plain');
-
-    $sizeInLines = (isset($_GET['size']) && $_GET['size'] >= 0) ? $_GET['size'] : $FILE_TXT_DEF_SIZE;
-
-    if ($sizeInLines > $FILE_TXT_MAX_SIZE) $sizeInLines = $FILE_TXT_MAX_SIZE; // max request 100 lines for now
-
-    $filePath = '/tmp/' . $sizeInLines . '.txt';
-    $cmd = './assets/scripts/rand_name.rb ' . $sizeInLines . ' > ' . $filePath;
-
-    shell_exec($cmd);
-
-    header('Content-Length: ' . filesize($filePath));
-    flush(); // Flush system output buffer
-    echo file_get_contents($filePath);
-    unlink($filePath);
-    exit();
   }
 }
