@@ -31,6 +31,7 @@ class DaveController extends BaseController {
 
     // all requests must be GET or OPTIONS
     if (!in_array($requestMethod, $allowedMethods)) {
+      // can't use $this->sendJSONOutput because it will return a 200
       header('HTTP/1.1 405');
       echo json_encode(new CustomResponse(array(
         'message' => 'Dave says: Only got time for GETs and OPTIONSs, slick.',
@@ -39,16 +40,40 @@ class DaveController extends BaseController {
       exit;
     }
 
-    // no empty requests
     if ($requestMethod == 'GET') {
+      // no empty requests
       if (!$this->qsParams) {
-        $this->sendOutput(
-          json_encode(new CustomResponse(array(
-            'message' => 'Dave says: I think you forgot to ask for something. I know about ?binary, ?dave(s), ?http_code, ?json, ?slack, and ?text. See https://github.com/michaelchadwick/daaaaave for more, man.',
-            'status' => '204'
-          )))
-        );
+        header('HTTP/1.1 200');
+        header('Content-Type: text/html');
+        echo <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dave</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+</head>
+<body>
 
+<p>Dave says: Welcome, friend. However, I think you forgot to ask for something.</p>
+
+<p>I know about:</p>
+<ul>
+  <li><code>?binary</code></li>
+  <li><code>?dave(s)</code></li>
+  <li><code>?http_code</code></li>
+  <li><code>?json</code>
+  <li><code>?slack</code>
+  <li><code>?text</code>
+</ul>
+
+<p>See <a href="https://github.com/michaelchadwick/daaaaave">Daaaaave</a> for more, man.</p>
+
+</body>
+</html>
+HTML;
         exit;
       }
 
@@ -60,7 +85,7 @@ class DaveController extends BaseController {
       // e.g. /?dave
       // we are returning a json array of one dave
       if (isset($this->qsParams['dave'])) {
-        $this->sendOutput(
+        $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Dave(
               $this->qsParams['dave'],
@@ -70,14 +95,12 @@ class DaveController extends BaseController {
             'error' => false
           )))
         );
-
-        exit;
       }
       
       // e.g. /?daves=5
       // we are returning a json array of daves
       if (isset($this->qsParams['daves'])) {
-        $this->sendOutput(
+        $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Dave(
               $this->qsParams['daves'], 
@@ -87,19 +110,15 @@ class DaveController extends BaseController {
             'error' => false
           )))
         );
-
-        exit;
       }
 
       // e.g. /?http_code=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
       if (isset($this->qsParams['http_code'])) {
-        $this->_processHttp($this->qsParams['http_code']);
-
         $resp = new Http($this->qsParams['http_code']);
 
         header('HTTP/1.1 ' . $resp->status . ($resp->error ? ' Bad Request' : ''));
-        $this->sendOutput(
+        $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'error' => $resp->error,
             'message' => $resp->message,
@@ -115,14 +134,12 @@ class DaveController extends BaseController {
 
       // e.g. /?sites
       if (isset($this->qsParams['sites'])) {
-        $this->sendOutput(
+        $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Sites(),
             'error' => false
           )))
         );
-
-        exit;
       }
 
       // e.g. /?slack
@@ -137,11 +154,12 @@ class DaveController extends BaseController {
       }
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
-      echo json_encode(new CustomResponse(array(
-        'message' => 'Dave says: Current OPTIONS available - ?binary, ?dave(s), ?http_code, ?slack, ?text',
-        'status' => 200
-      )));
-      exit;
+      $this->sendJSONOutput(
+        json_encode(new CustomResponse(array(
+          'message' => 'Dave says: The only things I know about are ?binary, ?dave(s), ?http_code, ?json, ?slack, and ?text, man.',
+          'status' => 200
+        )))
+      );
     }
   }
 
@@ -211,14 +229,14 @@ class DaveController extends BaseController {
           );
 
           if ($choice == 0) {
-            $this->sendOutput(
+            $this->sendJSONOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
                 'text' => 'Hey, just listening to _' . $songs[rand(0, count($songs) - 1)] . '_ right now. It *rules*!'
               ))
             );
           } else {
-            $this->sendOutput(
+            $this->sendJSONOutput(
               json_encode(array(
                 'response_type' => 'in_channel',
                 'text' => $replies[rand(0, count($replies) - 1)]
@@ -226,7 +244,7 @@ class DaveController extends BaseController {
             );
           }
         } else { // invalid token
-          $this->sendOutput(
+          $this->sendJSONOutput(
             json_encode(array(
               'text' => 'Dave says: \'What? I didn\'t understand that, dude.\''
             ))
@@ -235,14 +253,14 @@ class DaveController extends BaseController {
       }
       // missing internal token
       else {
-        $this->sendOutput(
+        $this->sendJSONOutput(
           json_encode(array(
             'text' => 'Dave says: \'Eh? I don\'t think I know you, buddy.\''
           ))
         );
       }
     } else { // missing external token
-      $this->sendOutput(
+      $this->sendJSONOutput(
         json_encode(array(
           'text' => 'Dave says: \'Eh? Who\'s there?\''
         ))

@@ -1,6 +1,7 @@
 <?php
 class CustomResponse {
   var $body;
+  var $contentType;
   var $customType;
   var $error;
   var $message;
@@ -9,12 +10,41 @@ class CustomResponse {
 
   public function __construct($values = null) {
     if ($values) {
-      $this->setBody(isset($values['body']) ? $values['body'] : null);
-      $this->setCustomType(isset($values['customType']) ? $values['customType'] : 'server');
-      $this->setError(isset($values['error']) ? $values['error'] : true);
-      $this->setMessage(isset($values['message']) ? $values['message'] : '');
-      $this->setStatus(isset($values['status']) ? $values['status'] : 200);
-      $this->setStatusText(isset($values['statusText']) ? $values['statusText'] : 'OK');
+      $this->setBody(
+        isset($values['body']) ? 
+        $values['body'] : 
+        null
+      );
+      $this->setContentType(
+        isset($values['contentType']) ? 
+        $values['contentType'] : 
+        'json'
+      );
+      $this->setCustomType(
+        isset($values['customType']) ? 
+        $values['customType'] : 
+        'server'
+      );
+      $this->setError(
+        isset($values['error']) ? 
+        $values['error'] : 
+        true
+      );
+      $this->setMessage(
+        isset($values['message']) ? 
+        $values['message'] : 
+        ''
+      );
+      $this->setStatus(
+        isset($values['status']) ? 
+        $values['status'] : 
+        200
+      );
+      $this->setStatusText(
+        isset($values['statusText']) ? 
+        $values['statusText'] : 
+        'OK'
+      );
     }
 
     return $this;
@@ -25,6 +55,13 @@ class CustomResponse {
   }
   public function setBody($body) {
     $this->body = $body;
+  }
+
+  public function getContentType() {
+    return $this->contentType;
+  }
+  public function setContentType($contentType) {
+    $this->customType = $contentType;
   }
 
   public function getCustomType() {

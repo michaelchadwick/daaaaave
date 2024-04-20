@@ -9,7 +9,7 @@ class BaseController {
    * __call magic method.
    */
   public function __call($name, $arguments) {
-    $this->sendOutput('', array('HTTP/1.1 404 Not Found'));
+    $this->sendJSONOutput('', array('HTTP/1.1 404 Not Found'));
   }
 
   /**
@@ -43,21 +43,23 @@ class BaseController {
   }
 
   /**
-   * Send API output.
+   * Send JSON API output.
    *
-   * @param mixed  $data
+   * @param mixed  $json
    * @param string $httpHeader
    */
-  protected function sendOutput($data, $httpHeaders=array()) {
+  protected function sendJSONOutput($json, $httpHeaders=array()) {
     header_remove('Set-Cookie');
 
+    // send HTTP headers
     if (is_array($httpHeaders) && count($httpHeaders)) {
       foreach ($httpHeaders as $httpHeader) {
         header($httpHeader);
       }
     }
 
-    echo $data;
+    // send JSON string
+    echo $json;
     exit;
   }
 }
