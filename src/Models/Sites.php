@@ -3,8 +3,10 @@
 namespace Dave\Models;
 
 class Sites {
+  var $list;
+
   public function __construct() {
-    print_r(array(
+    $this->list = array(
       [
         'title' => 'Audio Hash',
         'url' => 'https://ah.neb.host'
@@ -33,6 +35,8 @@ class Sites {
         'title' => 'SoundLister',
         'url' => 'https://soundlister.neb.host'
       ]
-    ));
+    );
+
+    return $this->list;
   }
 }

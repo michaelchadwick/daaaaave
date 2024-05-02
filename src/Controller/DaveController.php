@@ -134,9 +134,10 @@ HTML;
 
       // e.g. /?sites
       if (isset($this->qsParams['sites'])) {
+        $sites = new Sites();
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
-            'body' => new Sites(),
+            'body' => $sites->list,
             'error' => false
           )))
         );
