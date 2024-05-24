@@ -2,13 +2,15 @@
 
 namespace Src\Controller;
 
-class BaseController {
+class BaseController
+{
   private $config;
 
   /**
    * __call magic method.
    */
-  public function __call($name, $arguments) {
+  public function __call($name, $arguments)
+  {
     $this->sendJSONOutput('', array('HTTP/1.1 404 Not Found'));
   }
 
@@ -17,10 +19,11 @@ class BaseController {
    *
    * @return array
    */
-  protected function getUriSegments() {
+  protected function getUriSegments()
+  {
     if (isset($_SERVER['REQUEST_URI'])) {
       $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-      $uri = explode( '/', $uri );
+      $uri = explode('/', $uri);
 
       return $uri;
     } else {
@@ -33,7 +36,8 @@ class BaseController {
    *
    * @return array
    */
-  protected function getQueryStringParams() {
+  protected function getQueryStringParams()
+  {
     if (isset($_SERVER['QUERY_STRING'])) {
       parse_str($_SERVER['QUERY_STRING'], $query);
       return $query;
@@ -48,7 +52,8 @@ class BaseController {
    * @param mixed  $json
    * @param string $httpHeader
    */
-  protected function sendJSONOutput($json, $httpHeaders=array()) {
+  protected function sendJSONOutput($json, $httpHeaders = array())
+  {
     header_remove('Set-Cookie');
 
     // send HTTP headers

@@ -2,8 +2,10 @@
 
 namespace Dave\Models;
 
-class Text {
-  public function __construct($size) {
+class Text
+{
+  public function __construct($size)
+  {
     $FILE_TXT_DEF_SIZE = 5;
     $FILE_TXT_MAX_SIZE = 50;
 

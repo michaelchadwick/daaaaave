@@ -2,12 +2,14 @@
 
 namespace Dave\Models;
 
-class Http {
+class Http
+{
   var $error = false;
   var $message;
   var $status;
 
-  public function __construct($code) {
+  public function __construct($code)
+  {
     switch ($code) {
       case 0:
         $this->message = 'Dave says: I am nothing.';

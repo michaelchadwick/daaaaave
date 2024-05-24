@@ -14,18 +14,21 @@ use Dave\Models\Text;
 
 include PROJECT_ROOT_PATH . 'inc/config.php';
 
-class DaveController extends BaseController {
+class DaveController extends BaseController
+{
   private $qsParams;
   private $dotenv;
 
-  public function __construct () {
+  public function __construct()
+  {
     $this->dotenv = Dotenv::createImmutable(PROJECT_ROOT_PATH);
     $this->dotenv->load();
 
     $this->qsParams = $this->getQueryStringParams();
   }
 
-  public function processRequest() {
+  public function processRequest()
+  {
     $allowedMethods = ['GET', 'OPTIONS'];
     $requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 
@@ -50,10 +53,7 @@ class DaveController extends BaseController {
 <html lang="en">
 <head>
   <title>Dave</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
-  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <link rel="shortcut icon" href="./favicon.ico">
 </head>
 <body>
 
@@ -89,22 +89,22 @@ HTML;
           json_encode(new CustomResponse(array(
             'body' => new Dave(
               $this->qsParams['dave'],
-              'single', 
+              'single',
               isset($_GET['bypass'])
             ),
             'error' => false
           )))
         );
       }
-      
+
       // e.g. /?daves=5
       // we are returning a json array of daves
       if (isset($this->qsParams['daves'])) {
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Dave(
-              $this->qsParams['daves'], 
-              'multiple', 
+              $this->qsParams['daves'],
+              'multiple',
               isset($_GET['bypass'])
             ),
             'error' => false
@@ -164,7 +164,8 @@ HTML;
     }
   }
 
-  private function _processSlack() {
+  private function _processSlack()
+  {
     // did we get a Slack token?
     if (isset($this->qsParams['token'])) {
       $tokenExt = $this->qsParams['token'];

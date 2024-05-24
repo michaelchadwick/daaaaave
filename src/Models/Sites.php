@@ -2,10 +2,12 @@
 
 namespace Dave\Models;
 
-class Sites {
+class Sites
+{
   var $list;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->list = array(
       [
         'title' => 'Audio Hash',

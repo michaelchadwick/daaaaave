@@ -33,8 +33,7 @@ header('Pragma: public');
 
 // pass the request method to the DaveController
 use Src\Controller\DaveController;
+
 $config = [];
 $controller = new DaveController();
 $controller->processRequest();
-
-?>

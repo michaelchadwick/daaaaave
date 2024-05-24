@@ -2,8 +2,10 @@
 
 namespace Dave\Models;
 
-class Binary {
-  public function __construct($size) {
+class Binary
+{
+  public function __construct($size)
+  {
     $FILE_BIN_DEF_SIZE = 0;
     $FILE_BIN_MAX_SIZE = 10;
 
@@ -14,7 +16,7 @@ class Binary {
 
     // max request 10 MB for now
     if ($sizeInMB > $FILE_BIN_MAX_SIZE) {
-      $sizeInMB = $FILE_BIN_MAX_SIZE; 
+      $sizeInMB = $FILE_BIN_MAX_SIZE;
     }
 
     $sizeInBytes = $sizeInMB * 1024 * 1024;

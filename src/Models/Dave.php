@@ -2,10 +2,12 @@
 
 namespace Dave\Models;
 
-class Dave {
+class Dave
+{
   var $daves;
 
-  public function __construct($dave, $type, $bypass) {
+  public function __construct($dave, $type, $bypass)
+  {
     $DAVE_MIN_SIZE = 1;
     $DAVE_MAX_SIZE = 1000;
 
@@ -29,7 +31,7 @@ class Dave {
       }
 
       // build dave array
-      for($i = 0; $i < $daveCount; $i++) {
+      for ($i = 0; $i < $daveCount; $i++) {
         $daveArray[$i] = 'd' . (str_repeat('a', $i + 1)) . 've';
       }
     }
