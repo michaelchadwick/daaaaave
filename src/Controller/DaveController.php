@@ -84,7 +84,7 @@ HTML;
 
       // e.g. /?dave
       // we are returning a json array of one dave
-      if (isset($this->qsParams['dave'])) {
+      else if (isset($this->qsParams['dave'])) {
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Dave(
@@ -99,7 +99,7 @@ HTML;
 
       // e.g. /?daves=5
       // we are returning a json array of daves
-      if (isset($this->qsParams['daves'])) {
+      else if (isset($this->qsParams['daves'])) {
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
             'body' => new Dave(
@@ -114,7 +114,7 @@ HTML;
 
       // e.g. /?http_code=0|2xx|3xx|4xx|5xx
       // if http code, return pre-scripted JSON object
-      if (isset($this->qsParams['http_code'])) {
+      else if (isset($this->qsParams['http_code'])) {
         $resp = new Http($this->qsParams['http_code']);
 
         header('HTTP/1.1 ' . $resp->status . ($resp->error ? ' Bad Request' : ''));
@@ -128,12 +128,12 @@ HTML;
       }
 
       // e.g. /?json&size=5
-      if (isset($this->qsParams['json'])) {
+      else if (isset($this->qsParams['json'])) {
         return new Json($_GET['size']);
       }
 
       // e.g. /?sites
-      if (isset($this->qsParams['sites'])) {
+      else if (isset($this->qsParams['sites'])) {
         $sites = new Sites();
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
@@ -145,13 +145,21 @@ HTML;
 
       // e.g. /?slack
       // if slack call, return data to slack
-      if (isset($this->qsParams['slack'])) {
+      else if (isset($this->qsParams['slack'])) {
         $this->_processSlack();
       }
 
       // e.g. /?text&size=10
-      if (isset($this->qsParams['text'])) {
+      else if (isset($this->qsParams['text'])) {
         return new Text($_GET['size']);
+      }
+
+      else {
+        header('HTTP/1.1 404');
+        echo json_encode(new CustomResponse(array(
+          'status' => 404
+        )));
+        exit;
       }
     } elseif ($requestMethod == 'OPTIONS') {
       header('HTTP/1.1 200');
