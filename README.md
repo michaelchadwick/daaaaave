@@ -10,7 +10,6 @@ Need a simple web API for testing such functionalities? Ask Dave.
 
 returns HTML politely repudiating you for forgetting to ask for anything.
 
-
 ### Dave(s)
 
 `/?dave`
