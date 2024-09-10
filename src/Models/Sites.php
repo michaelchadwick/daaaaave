@@ -18,6 +18,10 @@ class Sites
         'url' => 'https://bogdle.neb.host'
       ],
       [
+        'title' => 'Deckdle',
+        'url' => 'https://deckdle.neb.host'
+      ],
+      [
         'title' => 'Gem Warrior',
         'url' => 'https://gw.neb.host'
       ],
