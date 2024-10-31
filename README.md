@@ -71,6 +71,25 @@ returns an array of (8) random items as JSON:
 }
 ```
 
+#### Config
+
+`/?config`
+
+returns a fake configuration JSON object:
+
+``` json
+{
+  "type": "form",
+  "locale": "en",
+  "apiVersion": "v1.10",
+  "appVersion": "2.251.4",
+  "maxUploadSize": 256000000,
+  "searchEnabled": true,
+  "trackingEnabled": false,
+  "userSearchType": "local"
+}
+```
+
 #### Text
 
 `/?text&size=100`

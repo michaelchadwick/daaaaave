@@ -6,6 +6,7 @@ use CustomResponse;
 use Dotenv\Dotenv;
 
 use Dave\Models\Binary;
+use Dave\Models\Config;
 use Dave\Models\Dave;
 use Dave\Models\Http;
 use Dave\Models\Json;
@@ -63,6 +64,7 @@ class DaveController extends BaseController
 <p>I know about:</p>
 <ul>
   <li><code>?binary</code></li>
+  <li><code>?config</code></li>
   <li><code>?dave(s)</code></li>
   <li><code>?http_code</code></li>
   <li><code>?json</code>
@@ -82,6 +84,18 @@ HTML;
       // e.g. /?binary&size=1
       if (isset($this->qsParams['binary'])) {
         return new Binary($_GET['size']);
+      }
+
+      // e.g. /?config
+      // e.g. /?json&size=5
+      else if (isset($this->qsParams['config'])) {
+        $config = new Config();
+        $this->sendJSONOutput(
+          json_encode(new CustomResponse(array(
+            'body' => $config->value,
+            'error' => false
+          )))
+        );
       }
 
       // e.g. /?dave
@@ -178,7 +192,7 @@ HTML;
       header('HTTP/1.1 200');
       $this->sendJSONOutput(
         json_encode(new CustomResponse(array(
-          'message' => 'Dave says: The only things I know about are ?binary, ?dave(s), ?http_code, ?json, ?slack, ?text, and ?version, man.',
+          'message' => 'Dave says: The only things I know about are ?binary, ?config, ?dave(s), ?http_code, ?json, ?slack, ?text, and ?version, man.',
           'status' => 200
         )))
       );

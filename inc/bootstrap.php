@@ -10,6 +10,7 @@ require_once PROJECT_ROOT_PATH . 'src/Controller/BaseController.php';
 
 // include our custom model classes
 require_once PROJECT_ROOT_PATH . 'src/Models/Binary.php';
+require_once PROJECT_ROOT_PATH . 'src/Models/Config.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Dave.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Http.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Json.php';
