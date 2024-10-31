@@ -11,6 +11,7 @@ use Dave\Models\Http;
 use Dave\Models\Json;
 use Dave\Models\Sites;
 use Dave\Models\Text;
+use Dave\Models\Version;
 
 include PROJECT_ROOT_PATH . 'inc/config.php';
 
@@ -67,6 +68,7 @@ class DaveController extends BaseController
   <li><code>?json</code>
   <li><code>?slack</code>
   <li><code>?text</code>
+  <li><code>?version</code>
 </ul>
 
 <p>See <a href="https://github.com/michaelchadwick/daaaaave">Daaaaave</a> for more, man.</p>
@@ -154,6 +156,17 @@ HTML;
         return new Text($_GET['size']);
       }
 
+      // e.g. /?version
+      else if (isset($this->qsParams['version'])) {
+        $version = new Version();
+        $this->sendJSONOutput(
+          json_encode(new CustomResponse(array(
+            'body' => $version->value,
+            'error' => false
+          )))
+        );
+      }
+
       else {
         header('HTTP/1.1 404');
         echo json_encode(new CustomResponse(array(
@@ -165,7 +178,7 @@ HTML;
       header('HTTP/1.1 200');
       $this->sendJSONOutput(
         json_encode(new CustomResponse(array(
-          'message' => 'Dave says: The only things I know about are ?binary, ?dave(s), ?http_code, ?json, ?slack, and ?text, man.',
+          'message' => 'Dave says: The only things I know about are ?binary, ?dave(s), ?http_code, ?json, ?slack, ?text, and ?version, man.',
           'status' => 200
         )))
       );

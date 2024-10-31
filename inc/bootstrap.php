@@ -15,6 +15,7 @@ require_once PROJECT_ROOT_PATH . 'src/Models/Http.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Json.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Sites.php';
 require_once PROJECT_ROOT_PATH . 'src/Models/Text.php';
+require_once PROJECT_ROOT_PATH . 'src/Models/Version.php';
 
 // include our custom response class
 require_once PROJECT_ROOT_PATH . 'src/Response/CustomResponse.php';

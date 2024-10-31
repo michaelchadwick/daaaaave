@@ -88,6 +88,16 @@ Marcker
 ...
 ```
 
+#### Version
+
+`/?version`
+
+returns a random app version, with major, minor, and patch segments, as a string:
+
+``` text
+1.40.233
+```
+
 ### HTTP Codes
 
 `/?http_code=404`
