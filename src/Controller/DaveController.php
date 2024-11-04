@@ -87,7 +87,6 @@ HTML;
       }
 
       // e.g. /?config
-      // e.g. /?json&size=5
       else if (isset($this->qsParams['config'])) {
         $config = new Config();
         $this->sendJSONOutput(
