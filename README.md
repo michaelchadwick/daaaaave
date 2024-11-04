@@ -86,7 +86,9 @@ returns a fake configuration JSON object:
   "maxUploadSize": 256000000,
   "searchEnabled": true,
   "trackingEnabled": false,
-  "userSearchType": "local"
+  "userSearchType": "local",
+  "awesomeLevel": 7,
+  "lameLevel": 2,
 }
 ```
 

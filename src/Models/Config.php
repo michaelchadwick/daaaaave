@@ -16,6 +16,8 @@ class Config
     $maxUploadSize = rand(1024, 1000000000);
     $searchEnabled = array_rand(array(True, False));
     $trackingEnabled = array_rand(array(True, False));
+    $awesomeLevel = rand(1, 10);
+    $lameLevel = rand(1, 10);
 
     $this->value = array(
       "config" => array(
@@ -26,7 +28,9 @@ class Config
         "maxUploadSize" => $maxUploadSize,
         "searchEnabled" => boolval($searchEnabled),
         "trackingEnabled" => boolval($trackingEnabled),
-        "userSearchType" => "local"
+        "userSearchType" => "local",
+        "awesomeLevel" => $awesomeLevel,
+        "lameLevel" => $lameLevel,
       )
     );
   }
