@@ -113,7 +113,7 @@ HTML;
       }
 
       // e.g. /?daves=5
-      // we are returning a json array of daves
+      // we are returning a json array of multiple daves
       else if (isset($this->qsParams['daves'])) {
         $this->sendJSONOutput(
           json_encode(new CustomResponse(array(
