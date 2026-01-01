@@ -10,20 +10,8 @@ class Sites
   {
     $this->list = array(
       [
-        'title' => 'Audio Hash',
-        'url' => 'https://ah.neb.host'
-      ],
-      [
-        'title' => 'Bogdle',
-        'url' => 'https://bogdle.neb.host'
-      ],
-      [
         'title' => 'Deckdle',
         'url' => 'https://deckdle.neb.host'
-      ],
-      [
-        'title' => 'Gem Warrior',
-        'url' => 'https://gw.neb.host'
       ],
       [
         'title' => 'Keebord',
@@ -34,8 +22,20 @@ class Sites
         'url' => 'https://raffler.neb.host'
       ],
       [
+        'title' => 'Audio Hash',
+        'url' => 'https://neb.host/apps/audiohash'
+      ],
+      [
+        'title' => 'Bogdle',
+        'url' => 'https://bogdle.neb.host'
+      ],
+      [
+        'title' => 'Gem Warrior',
+        'url' => 'https://neb.host/apps/gemwarrior'
+      ],
+      [
         'title' => 'Sketchage',
-        'url' => 'https://sketchage.neb.host'
+        'url' => 'https://neb.host/apps/sketchage'
       ],
       [
         'title' => 'SoundLister',
